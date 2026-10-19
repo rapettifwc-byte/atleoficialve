@@ -3,47 +3,146 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#FFFFFF">
-  <meta name="description" content="Acceso oficial a la tienda online ATLE. Ropa deportiva femenina en Venezuela.">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Enlace oficial de ATLE. Descubre nuestra tienda online de ropa deportiva femenina en Venezuela.">
   <link rel="icon" href="/logos/ATLE_symbol_negro.svg" type="image/svg+xml">
-  <title>ATLE | Tienda online</title>
+  <title>ATLE | Enlace oficial</title>
   <style>
-    :root { color-scheme: light; --black:#111; --white:#fff; --gray:#777; --line:#e8e8e8; }
-    * { box-sizing:border-box; }
-    html { min-height:100%; background:var(--white); }
+    :root {
+      color-scheme: light;
+      --black: #111111;
+      --white: #ffffff;
+      --gray: #646464;
+      --line: #d7d7d7;
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--white); }
     body {
-      margin:0; min-height:100svh; padding:28px 22px calc(22px + env(safe-area-inset-bottom));
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      background:var(--white); color:var(--black); font-family:Arial,Helvetica,sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: 34px 22px calc(18px + env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--white);
+      color: var(--black);
+      font-family: Arial, Helvetica, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
-    main { width:min(100%,390px); margin:auto; display:flex; flex-direction:column; align-items:center; text-align:center; }
-    .brand { display:block; width:min(76%,270px); height:auto; margin:0 auto 48px; }
-    .rule { width:34px; height:1px; background:#111; margin:0 auto 25px; }
+    body::before {
+      content: "";
+      position: fixed;
+      z-index: 2;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: #292a2d;
+    }
+    main {
+      width: min(100%, 475px);
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .brand {
+      display: block;
+      width: min(58vw, 210px);
+      height: auto;
+      margin: 0 auto 43px;
+    }
+    .eyebrow {
+      margin: 0 0 16px;
+      color: #555555;
+      font-size: 9px;
+      line-height: 1.5;
+      font-weight: 600;
+      letter-spacing: .27em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 100%;
+      margin: 0 0 20px;
+      color: var(--black);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 7.4vw, 3.35rem);
+      font-weight: 400;
+      line-height: 1.04;
+      letter-spacing: -.055em;
+    }
+    .description {
+      max-width: 365px;
+      margin: 0 0 34px;
+      color: var(--gray);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.8;
+    }
     .cta {
-      appearance:none; -webkit-appearance:none; display:flex; align-items:center; justify-content:center; gap:15px;
-      width:100%; min-height:58px; padding:17px 22px; border:1px solid var(--black); border-radius:2px;
-      background:var(--black); color:var(--white); text-decoration:none; text-transform:uppercase;
-      letter-spacing:.13em; font-size:11px; line-height:1.4; font-weight:700; cursor:pointer;
-      transition:background .18s ease, color .18s ease;
+      appearance: none;
+      -webkit-appearance: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      min-height: 56px;
+      padding: 17px 20px;
+      border: 1px solid var(--black);
+      border-radius: 2px;
+      background: var(--black);
+      color: var(--white);
+      text-decoration: none;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .13em;
+      font-size: 11px;
+      line-height: 1.4;
+      font-weight: 700;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background .18s ease, transform .18s ease;
     }
-    .cta:hover { background:#2a2a2a; }
-    .cta:focus-visible { outline:2px solid var(--black); outline-offset:4px; }
-    .arrow { font-size:17px; line-height:1; font-weight:400; }
-    .fallback { display:none; margin:18px 0 0; max-width:320px; color:#5f5f5f; font-size:12px; line-height:1.7; }
-    .fallback strong { color:#222; }
-    footer { width:100%; text-align:center; padding-top:26px; color:#888; font-size:9px; letter-spacing:.2em; text-transform:uppercase; }
-    @media (max-width:380px) { .brand { width:min(80%,245px); margin-bottom:40px; } .cta { min-height:55px; } }
-    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none !important; } }
+    .cta:hover { background: #292929; }
+    .cta:active { transform: translateY(1px); }
+    .cta:focus-visible { outline: 2px solid var(--black); outline-offset: 4px; }
+    .arrow { font-size: 16px; line-height: 1; font-weight: 400; letter-spacing: 0; }
+    footer {
+      width: 100%;
+      margin-top: 22px;
+      color: #777777;
+      text-align: center;
+      font-size: 9px;
+      line-height: 1.5;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+    @media (max-width: 380px) {
+      body { padding-left: 20px; padding-right: 20px; }
+      .brand { width: min(62vw, 200px); margin-bottom: 37px; }
+      .eyebrow { font-size: 8px; letter-spacing: .23em; }
+      h1 { font-size: clamp(2.35rem, 10.3vw, 2.7rem); }
+      .description { font-size: 13px; margin-bottom: 29px; }
+      .cta { min-height: 54px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
   </style>
 </head>
 <body>
   <main>
-    <img class="brand" src="/logos/ATLE_full_negro.svg" alt="ATLE — Hecha para tu ritmo" width="260" height="84">
-    <div class="rule" aria-hidden="true"></div>
-    <a class="cta" id="enter-store" href="https://atleoficial.vercel.app/">
+    <img class="brand" src="/logos/ATLE_full_negro.svg" alt="ATLE — Hecha para tu ritmo" width="210" height="68">
+    <p class="eyebrow">Enlace oficial de ATLE</p>
+    <h1>Hecha para tu<br>ritmo.</h1>
+    <p class="description">Descubre nuestra colección de ropa deportiva femenina. Elige tus prendas y coordina tu pedido directamente con ATLE.</p>
+    <a class="cta" id="enter-store" href="https://atleoficial.vercel.app/" aria-label="Entrar a la tienda ATLE">
       <span>Entrar a la tienda</span><span class="arrow" aria-hidden="true">↗</span>
     </a>
-    <p class="fallback" id="fallback" role="status" aria-live="polite">Si no se abrió el navegador externo, toca el menú <strong>⋯</strong> de Instagram y selecciona <strong>Abrir en Safari</strong>. En Android, usa el menú <strong>⋮</strong> y elige abrir en Chrome o en el navegador externo.</p>
   </main>
   <footer>Venezuela · Tienda online</footer>
   <script>
@@ -51,34 +150,46 @@
       'use strict';
       const storeUrl = 'https://atleoficial.vercel.app/';
       const button = document.getElementById('enter-store');
-      const fallback = document.getElementById('fallback');
       const ua = navigator.userAgent || '';
       const isInstagram = /Instagram|InstagramLite/i.test(ua);
       const isIOS = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
       const isAndroid = /Android/i.test(ua);
 
-      // No se realiza ninguna redirección al cargar. Solo se intenta salir del navegador interno tras pulsar el botón.
+      // No hay redirección al cargar la página. El intento externo solo ocurre al pulsar el botón.
       button.addEventListener('click', (event) => {
-        if (isInstagram && isIOS) {
+        if (!isInstagram) return;
+
+        if (isIOS) {
           event.preventDefault();
-          const externalUrl = 'instagram://extbrowser/?url=' + encodeURIComponent(storeUrl);
-          window.location.href = externalUrl;
+          let leftPage = false;
+          const onVisibilityChange = () => {
+            if (document.visibilityState === 'hidden') leftPage = true;
+          };
+          document.addEventListener('visibilitychange', onVisibilityChange);
+          window.location.href = 'instagram://extbrowser/?url=' + encodeURIComponent(storeUrl);
           window.setTimeout(() => {
-            if (document.visibilityState === 'visible') fallback.style.display = 'block';
-          }, 1400);
+            document.removeEventListener('visibilitychange', onVisibilityChange);
+            // Si Instagram no transfiere al navegador externo, la tienda sigue abriendo como alternativa.
+            if (!leftPage && document.visibilityState === 'visible') window.location.href = storeUrl;
+          }, 1600);
           return;
         }
-        if (isInstagram && isAndroid) {
+
+        if (isAndroid) {
           event.preventDefault();
-          const intentUrl = 'intent://atleoficial.vercel.app/#Intent;scheme=https;action=android.intent.action.VIEW;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(storeUrl) + ';end';
+          const fallback = encodeURIComponent(storeUrl);
+          const intentUrl = 'intent://atleoficial.vercel.app/#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + fallback + ';end';
+          let leftPage = false;
+          const onVisibilityChange = () => {
+            if (document.visibilityState === 'hidden') leftPage = true;
+          };
+          document.addEventListener('visibilitychange', onVisibilityChange);
           window.location.href = intentUrl;
           window.setTimeout(() => {
-            if (document.visibilityState === 'visible') fallback.style.display = 'block';
-          }, 1400);
-          return;
+            document.removeEventListener('visibilitychange', onVisibilityChange);
+            if (!leftPage && document.visibilityState === 'visible') window.location.href = storeUrl;
+          }, 1600);
         }
-        // Fuera de Instagram, el enlace normal abre la tienda directamente.
-        button.href = storeUrl;
       });
     })();
   </script>
