@@ -1,0 +1,63 @@
+/* ATLE Studio · Black & White Edition · v14 · únicamente estilos */
+:root{--olive:#111;--dark:#111;--cream:#FAF9F6;--paper:#fff;
+ --ink:#1B1B1B;--muted:#6A6A6A;--line:#E6E6E6;--accent:#424242;
+ --shadow:0 15px 52px #00000012}
+body{background:#fff;color:#1B1B1B}
+.auth-wrap{background:#fff}.auth-art{background:#111;color:#fff}
+.auth-art:after{background:linear-gradient(130deg,transparent 35%,rgba(255,255,255,.075) 100%)}
+.auth-main{background:#fff}.auth-card h1{color:#111}
+.auth-card .kicker,.overline{color:#5B5B5B}
+.form-control,input,textarea,select{border-color:#D8D8D8;color:#222}
+.form-control:focus,input:focus,textarea:focus,select:focus{outline-color:#555;border-color:#444}
+.btn{background:#111;color:#fff;border-color:#111;border-radius:5px}
+.btn:hover{background:#353535;color:#fff}
+.btn.secondary{background:#F0F0F0;color:#222;border-color:#E5E5E5}
+.btn.secondary:hover{background:#E5E5E5;color:#111}
+.btn.outline{background:#fff;color:#222;border-color:#BDBDBD}
+.btn.outline:hover{background:#F5F5F5}
+.text-btn{color:#363636}
+.sidebar{background:#111;color:#fff}
+.side-nav .nav-link,.nav-link{color:#D8D8D8}
+.nav-link:hover,.nav-link.active{background:#2F2F2F;color:#fff;border-color:#D8D8D8}
+.nav-link.active .ico{color:#fff}
+.sidebar-bottom a,.sidebar-bottom button{color:#E4E4E4}
+.topbar{background:#fff;border-color:#E7E7E7}
+.admin-body{background:#fff}.content{background:#fff}
+.view-head h2{color:#111}.view-head p{color:#676767}
+.stat,.panel{background:#fff;border-color:#E8E8E8;box-shadow:0 4px 18px #00000009}
+.stat-number{color:#111}.stat-label{color:#676767}
+.panel-head{border-color:#E9E9E9}.panel-head h3{color:#191919}
+.panel-note{background:#FAF9F6;border-color:#E9E7E3;color:#666}
+.panel-note strong{color:#171717}
+.field label,.upload-zone .upload-head{color:#363636}
+.field .hint,.help{color:#777}
+.mini-preview{background:#F8F8F8;border-color:#E4E4E4}
+.upload-zone{background:#FAFAFA;border-color:#DADADA}
+.upload-zone img,.thumb{background:#F2F2F2}
+.file-input::file-selector-button{background:#EAEAEA;color:#262626}
+.product-table td,.product-table th{border-color:#EBEBEB}
+.product-table th,.tag-slim{color:#686868}
+.pills{background:#F0F0F0;color:#333}
+.pills.off{background:#F5F5F5;color:#777}
+.color-card,.checkout-field-card{background:#FDFDFD;border-color:#E5E5E5}
+.pill-list code{background:#F4F4F4;color:#444}
+.checkline input{accent-color:#111}
+dialog{background:#fff}dialog::backdrop{background:#000000A8}
+.close{background:#F1F1F1;color:#222}
+.sample-text{background:#F8F8F8;color:#222}
+.toast{background:#111}
+.loading{color:#555}
+.header-tip{border-color:#777;background:#F8F8F8;color:#555}
+.checkout-field-top strong{color:#222}
+.checkout-field-controls button{color:#333;border-color:#DADADA;background:#fff}
+.checkout-field-controls button:hover{background:#F3F3F3}
+.checkout-flags label{color:#555}
+.checkout-form-preview{background:#FAF9F6;border-color:#E7E5E0}
+.checkout-form-preview label,.checkout-form-preview h3{color:#222}
+.checkout-form-preview p{color:#666}
+.mobile-menu{background:#F7F7F7;border-color:#E0E0E0;color:#222}
+@media(max-width:760px){.sidebar{background:#111}}
+.topbar .crumb,.topbar-right{color:#656565}
+.avatar{background:#F0F0F0;color:#222}
+.sidebar-brand span{color:#E4E4E4}
+.auth-art:after{color:#fff}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="robots" content="noindex,follow">
+<meta name="description" content="Acceso oficial a la tienda ATLE. Hecha para tu ritmo.">
+<link rel="icon" href="/logos/ATLE_symbol_negro.svg" type="image/svg+xml">
+<title>ATLE | Accede a nuestra tienda</title>
+<style>
+:root{color-scheme:light;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#161616}
+*{box-sizing:border-box}body{margin:0;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 21px;background:#fff}
+main{width:min(100%,475px);margin:auto;text-align:center}.brand{display:block;width:min(53%,235px);height:auto;margin:0 auto 38px}
+.tag{font-size:10px;letter-spacing:.26em;font-weight:700;color:#777;text-transform:uppercase;margin:0 0 14px}
+h1{font:400 clamp(36px,8vw,53px)/1.1 Georgia,'Times New Roman',serif;letter-spacing:-.055em;margin:0 auto 18px;max-width:375px}
+.intro{font-size:14px;line-height:1.8;color:#5f5f5f;margin:0 auto 34px;max-width:340px}
+.actions{display:grid;gap:11px}.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:55px;background:#111;border:1px solid #111;color:#fff;font-weight:700;text-decoration:none;letter-spacing:.01em;font-size:13px;cursor:pointer;border-radius:2px;padding:13px 18px}
+.btn:hover{background:#333}.btn:focus-visible,button:focus-visible{outline:2px solid #111;outline-offset:4px}
+.btn.secondary{color:#171717;background:#fff;border-color:#C8C8C8}.btn.secondary:hover{background:#f6f6f6}
+.help{border-top:1px solid #e7e7e7;margin-top:30px;padding-top:22px;text-align:left}.help summary{font-size:13px;font-weight:700;cursor:pointer;line-height:1.6;list-style-position:outside}
+.help p,.help li{font-size:12px;line-height:1.85;color:#666}.help ol{padding-left:20px}.help li+li{margin-top:7px}
+#feedback{font-size:12px;min-height:18px;color:#414141;margin:13px 0 0}
+.end{font-size:10px;letter-spacing:.2em;color:#999;text-align:center;padding:15px 0}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<img class="brand" src="/logos/ATLE_full_negro.svg" alt="ATLE — Hecha para tu ritmo">
+<p class="tag">Enlace oficial de ATLE</p>
+<h1>Hecha para tu ritmo.</h1>
+<p class="intro">Descubre nuestra colección de ropa deportiva femenina. Elige tus prendas y coordina tu pedido directamente con ATLE.</p>
+<div class="actions">
+<a class="btn" id="go-shop" href="https://atleoficial.vercel.app/">Entrar a la tienda <span aria-hidden="true">&nbsp;↗</span></a>
+<button class="btn secondary" id="copy-url" type="button">Copiar enlace de la tienda</button>
+<a class="btn secondary" id="android-external" style="display:none" href="intent://atleoficial.vercel.app/#Intent;scheme=https;action=android.intent.action.VIEW;end">Intentar abrir en el navegador externo ↗</a>
+</div>
+<div role="status" id="feedback" aria-live="polite"></div>
+<details class="help">
+<summary>¿Instagram abrió el enlace dentro de la aplicación?</summary>
+<p>Algunas aplicaciones abren las páginas en su propio navegador. Por seguridad, ningún sitio web puede obligarlas a utilizar Safari o Chrome.</p>
+<ol>
+<li><strong>iPhone:</strong> abre el menú <strong>⋯</strong> del navegador de Instagram y selecciona <strong>Abrir en el navegador</strong> o en Safari, si aparece.</li>
+<li><strong>Android:</strong> abre el menú <strong>⋮</strong> de Instagram y selecciona <strong>Abrir en el navegador</strong> o usa «Intentar abrir en el navegador externo» si aparece arriba.</li>
+<li>Si no encuentras esa opción, pulsa <strong>Copiar enlace</strong> y pégalo en Safari, Chrome o tu navegador favorito.</li>
+</ol>
+</details>
+</main>
+<footer class="end">ATLE · HECHA PARA TU RITMO</footer>
+<script>
+(() => {
+  'use strict';
+  const url='https://atleoficial.vercel.app/';
+  const feedback=document.getElementById('feedback');
+  if(/Android/i.test(navigator.userAgent))document.getElementById('android-external').style.display='flex';
+  document.getElementById('copy-url').addEventListener('click',async()=>{
+    try{
+      if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText(url)}
+      else{
+        const input=document.createElement('textarea');input.value=url;input.style.position='fixed';input.style.left='-9999px';document.body.append(input);input.select();const success=document.execCommand('copy');input.remove();if(!success)throw new Error('No se pudo copiar');
+      }
+      feedback.textContent='Enlace copiado. Pégalo en el navegador que prefieras.';
+    }catch(e){feedback.textContent='Copia esta dirección: '+url;}
+  });
+  document.getElementById('android-external').addEventListener('click',()=>{feedback.textContent='Si Instagram bloquea la apertura, utiliza el menú ⋮ o copia el enlace.'});
+})();
+</script>
+</body>
+</html>

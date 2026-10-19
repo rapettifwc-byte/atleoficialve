@@ -1,0 +1,89 @@
+/* ATLE · Black & White Edition · v14
+   Identidad exclusivamente blanco, negro y neutrales. Marfil: solo pequeños fondos.
+   Capa de presentación: no modifica productos, datos ni Supabase. */
+:root{
+ --cream:#FAF9F6;--paper:#FFFFFF;--olive:#111111;--olive-dark:#111111;
+ --ink:#171717;--muted:#737373;--line:#E8E8E8;--sage:#DEDEDE;
+ --rose:#686868;--shadow:0 18px 54px rgba(0,0,0,.075);
+}
+html,body{background:#fff;color:var(--ink)}
+::selection{background:#DADADA;color:#111}
+:focus-visible,a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline-color:#292929}
+.announcement{background:#111;color:#fff;letter-spacing:.13em}
+.site-header{background:rgba(255,255,255,.985);border-bottom:1px solid #E8E8E8;box-shadow:0 1px 18px #00000009}
+.desktop-nav a:hover,.mobile-nav a:hover{color:#565656}
+.icon-btn{color:#111}.icon-btn:hover{background:#F0F0F0}
+.cart-count{background:#111;color:#fff}
+.mobile-nav{background:#fff;border-color:#E7E7E7}
+.mobile-menu-btn{color:#111}
+.hero{background:#fff}
+.hero-grid{background:#F7F7F7}
+.hero-content{background:#F8F8F8}
+.hero .eyebrow,.eyebrow{color:#555}
+.hero h1,.hero .hero-sub,.section-title,.story h2,.value-card h3,.catalog-intro h1{color:#111}
+.hero-sub{color:#575757}
+.hero-media{background:#F2F2F2}
+.hero-badge{background:rgba(255,255,255,.965);color:#222;box-shadow:0 8px 24px #0000001A}
+.hero-badge img{filter:grayscale(1)}
+.btn,.product-add,.wa-cta{background:#111;color:#fff;border-color:#111;border-radius:2px}
+.btn:hover,.product-add:hover,.wa-cta:hover{background:#333;border-color:#333;color:#fff}
+.btn.ghost{background:transparent;border-color:#AFAFAF;color:#151515}
+.btn.ghost:hover{background:#F3F3F3;border-color:#555}
+.perks{background:#fff}.perk+.perk{border-color:#E9E9E9}
+.perk svg,.value-card svg,.search-wrap svg{stroke:#333}
+.perk span,.perk strong,.heading-aside{color:#575757}
+.small-label{color:#555}
+.products-section{background:#fff}
+.filter-btn{background:#fff;color:#333;border-color:#DEDEDE}
+.filter-btn.active,.filter-btn:hover{background:#111;border-color:#111;color:#fff}
+.search-wrap{border-color:#E4E4E4;background:#fff}
+.search-wrap input{color:#171717}
+.product-card{background:#fff;border-color:#ECECEC;box-shadow:0 5px 18px #0000000A}
+.product-card:hover{box-shadow:0 18px 40px #00000019}
+.product-photo{background:#F6F6F6}
+.product-photo .quick-view{background:#FFFFFFF5;color:#222}
+.tag{background:#fff;color:#363636;border:1px solid #EAEAEA}
+.category{color:#737373}.product-name,.price{color:#171717}
+.product-desc,.currency-tag,.variant-row label{color:#6C6C6C}
+.variant-row select{background:#fff;color:#222;border-color:#E1E1E1}
+.empty-search{border-color:#D5D5D5;color:#666}
+.story{background:#FAF9F6}.story p,.value-card p{color:#656565}
+.story .motto{color:#222}
+.value-card{border-top-color:#D8D8D8}
+.signature{background:#fff}.signature p{color:#656565}
+.footer{background:#101010;color:#fff}
+.footer p{color:#D4D4D4}.footer a{color:#F1F1F1}
+.footer small,.footer-bottom{color:#AFAFAF}
+.scrim{background:rgba(0,0,0,.64)}
+.cart-drawer{background:#fff}.cart-foot{background:#F8F8F8}
+.cart-item{border-color:#E7E7E7}
+.qty-control{border-color:#DEDEDE}
+.qty-control button:hover{background:#F0F0F0}
+.cart-variant,.cart-foot .muted{color:#666}
+.cart-empty svg{stroke:#777}
+dialog{background:#fff;color:#111;box-shadow:0 24px 90px #00000030}
+dialog::backdrop{background:rgba(0,0,0,.67)}
+.field input,.field select,.field textarea,.detail-meta select{background:#fff;border-color:#D8D8D8;color:#222}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#444}
+.checkout-summary{background:#F9F9F9;border-color:#E7E7E7;color:#222}
+.checkout-help,.checkout-conditional-note{color:#686868}
+.loading-atle{color:#606060}
+/* Los estados de error se mantienen accesibles, sin convertirse en acentos de marca. */
+.loading-atle.error{background:#F7F7F7;color:#242424;border:1px solid #D8D8D8}
+.loading-atle.error .retry-collection{margin:12px auto 0;background:#111;color:#fff;border:0;padding:10px 20px;border-radius:2px;font-size:12px}
+.toast{background:#111;color:#fff}
+.catalog-intro{background:#FAF9F6}
+.catalog-intro .small-label{color:#555}
+.detail-thumbs button.is-active{outline:2px solid #111}
+.more-products-wrap p{color:#666}
+.section-heading .section-title::after{content:'';display:block;width:38px;height:2px;background:#171717;margin-top:15px}
+.product-card,.btn,.filter-btn,.search-wrap,.variant-row select{transition:background-color .2s,border-color .2s,box-shadow .2s,transform .2s}
+@media(max-width:650px){.site-header{background:#fff}.hero-content{background:#F8F8F8}}
+
+/* ATLE v15 · Enlaces sociales con iconos monocromáticos y contraste legible. */
+.footer a.social-link{display:inline-flex;align-items:center;gap:11px;max-width:100%;width:max-content;min-height:38px;margin:0 0 10px;padding:2px 1px;color:#f6f6f6;text-decoration:none;letter-spacing:.005em;transition:color .18s ease,transform .18s ease}
+.footer a.social-link:hover{color:#fff;transform:translateX(2px);text-decoration:underline;text-underline-offset:5px}
+.footer a.social-link:focus-visible{outline:2px solid #fff;outline-offset:4px}
+.social-icon{width:21px;height:21px;flex:0 0 21px;display:block;color:#fff}
+.social-label{overflow-wrap:anywhere}
+@media(max-width:550px){.footer a.social-link{min-height:44px;font-size:13px}.social-icon{width:22px;height:22px;flex-basis:22px}}
