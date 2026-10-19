@@ -39,7 +39,7 @@ h1{font:400 clamp(36px,8vw,53px)/1.1 Georgia,'Times New Roman',serif;letter-spac
 <div role="status" id="feedback" aria-live="polite"></div>
 <details class="help">
 <summary>¿Instagram abrió el enlace dentro de la aplicación?</summary>
-<p>Algunas aplicaciones abren las páginas en su propio navegador. Por seguridad, ningún sitio web puede obligarlas a utilizar Safari o Chrome.</p>
+<p>Algunas aplicaciones abren las páginas en su propio navegador. ATLE intentará abrir el navegador externo cuando el dispositivo lo permita. Si Instagram bloquea la apertura, puedes hacerlo manualmente.</p>
 <ol>
 <li><strong>iPhone:</strong> abre el menú <strong>⋯</strong> del navegador de Instagram y selecciona <strong>Abrir en el navegador</strong> o en Safari, si aparece.</li>
 <li><strong>Android:</strong> abre el menú <strong>⋮</strong> de Instagram y selecciona <strong>Abrir en el navegador</strong> o usa «Intentar abrir en el navegador externo» si aparece arriba.</li>
@@ -52,6 +52,15 @@ h1{font:400 clamp(36px,8vw,53px)/1.1 Georgia,'Times New Roman',serif;letter-spac
 (() => {
   'use strict';
   const url='https://atleoficial.vercel.app/';
+  // iOS Instagram: una pagina intermedia con meta refresh solicita el navegador externo.
+  // No funciona en todas las versiones; la pagina intermedia conserva un acceso manual.
+  const ua=navigator.userAgent||'';
+  const isInstagram=/(Instagram|InstagramLite)/i.test(ua);
+  const isIOS=/(iPhone|iPad|iPod)/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints>1);
+  if(isInstagram && isIOS){
+    window.location.replace('/abrir-ig.html');
+    return;
+  }
   const feedback=document.getElementById('feedback');
   if(/Android/i.test(navigator.userAgent))document.getElementById('android-external').style.display='flex';
   document.getElementById('copy-url').addEventListener('click',async()=>{
