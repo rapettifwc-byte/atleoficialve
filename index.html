@@ -30,7 +30,67 @@
     .more-products-wrap{padding:39px 0 0;text-align:center;display:grid;justify-items:center;gap:12px}.more-products-wrap p{font-size:12px;color:#798174;margin:0}.more-products-btn{padding-inline:31px;min-height:50px;border-radius:3px}.catalog-intro{background:#E8E7DB;padding:62px 0 46px;text-align:center}.catalog-intro h1{font:400 clamp(39px,5vw,67px) Georgia,serif;letter-spacing:-.04em;color:var(--olive-dark);margin:0 0 16px}.catalog-intro p{max-width:540px;margin:0 auto;color:#5D6956;font-size:14px;line-height:1.8}.catalog-intro .small-label{margin-bottom:17px}.catalog-page .products-section{padding-top:56px}.tools[hidden]{display:none!important}.catalog-page .tools{display:flex!important}.field[hidden]{display:none!important}.checkout-conditional-note{font-size:11px;color:#718168;margin:-4px 0 0;line-height:1.5}.checkout-summary{font-size:13px}.checkout-summary strong{white-space:nowrap}
     @media(max-width:600px){.catalog-intro{padding:44px 0 29px}.more-products-wrap{padding-top:25px}}
   </style>
-<link rel="stylesheet" href="/atle-theme.css?v=15">
+<link rel="stylesheet" href="/atle-theme.css?v=15.2">
+
+<!-- ATLE v15.3 · Pie editorial optimizado; no modifica las funciones de tienda. -->
+<style id="atle-footer-layout-v15-3">
+  .footer .footer-grid {
+    display:grid;
+    grid-template-columns:minmax(0,1.15fr) minmax(130px,.54fr) minmax(260px,.85fr);
+    column-gap:clamp(26px,4vw,64px);
+    row-gap:34px;
+    align-items:start;
+  }
+  .footer .footer-grid > div { min-width:0; }
+  .footer .atle-location {
+    display:flex;align-items:center;gap:9px;
+    width:fit-content;max-width:100%;margin-top:22px;
+    color:#E6E6E6;font-size:12px;line-height:1.45;letter-spacing:.045em;
+  }
+  .footer .atle-location svg {width:18px;height:18px;flex:0 0 18px;stroke:#E3E3E3;}
+  .footer .atle-location [aria-hidden="true"] {padding:0 3px;color:#8C8C8C;}
+  .footer .atle-footer-contact {min-width:0;}
+  .footer .atle-social-list {display:grid;gap:2px;max-width:340px;}
+  .footer .atle-social-list a.social-link {
+    display:flex!important;align-items:center!important;justify-content:flex-start;
+    gap:13px!important;box-sizing:border-box;
+    width:100%!important;max-width:100%;min-width:0;min-height:49px;
+    padding:10px 1px!important;margin:0!important;
+    border-bottom:1px solid rgba(255,255,255,.17);
+    color:#F7F7F7!important;font-size:13px;line-height:1.4;
+    text-decoration:none!important;transform:none!important;
+  }
+  .footer .atle-social-list a.social-link:hover {color:#FFF!important;border-color:rgba(255,255,255,.5);}
+  .footer .atle-social-list a.social-link:focus-visible {outline:2px solid #FFF;outline-offset:3px;}
+  .footer .atle-social-list .atle-social-icon {
+    display:block!important;width:22px!important;height:22px!important;
+    min-width:22px;min-height:22px;flex:0 0 22px!important;
+    color:#F7F7F7!important;stroke:currentColor;vertical-align:middle;
+  }
+  .footer .atle-social-list .atle-social-icon[fill="currentColor"] {stroke:none;}
+  .footer .atle-social-list .social-label {
+    display:block!important;min-width:0;max-width:100%;
+    overflow-wrap:anywhere;color:inherit!important;line-height:1.45;
+    font-size:13px;letter-spacing:0;
+  }
+  .footer .atle-contact-note {
+    display:block!important;clear:both!important;
+    max-width:305px!important;margin:14px 0 0!important;
+    padding:0!important;color:#ADADAD!important;
+    font-size:11px!important;line-height:1.65!important;
+  }
+  @media(max-width:960px){
+    .footer .footer-grid {grid-template-columns:minmax(0,1fr) minmax(235px,1fr);gap:34px 42px;}
+    .footer .footer-grid > div:first-child {grid-column:1/-1;}
+  }
+  @media(max-width:600px){
+    .footer .footer-grid {grid-template-columns:minmax(0,1fr);row-gap:35px;}
+    .footer .footer-grid > div:first-child {grid-column:auto;}
+    .footer .atle-social-list {max-width:100%;}
+    .footer .atle-contact-note {max-width:100%!important;}
+    .footer .footer-bottom {gap:10px;}
+  }
+</style>
 </head>
 <body>
   <div class="announcement"><span id="announcement-text">ATLE · HECHA PARA TU RITMO</span></div>
@@ -125,16 +185,25 @@ Una forma de sentirte.</h2>
         <div>
           <img class="footer-logo" src="logos/ATLE_full_blanco.png" alt="ATLE — Hecha para tu ritmo" loading="lazy">
           <p data-config-text="footer_texto">Ropa deportiva femenina para acompañarte en movimiento. Hecha para tu ritmo.</p>
+          <div class="atle-location" aria-label="ATLE es una tienda online en Venezuela"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5.2-8 11-8 11S4 15.2 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg><span>Venezuela <span aria-hidden="true">·</span> Tienda online</span></div>
         </div>
         <div>
           <h3>Explora</h3>
           <a href="#inicio">Inicio</a><a href="/catalogo">Catálogo completo</a><a href="#nosotras">Nuestra esencia</a>
         </div>
-        <div>
+        <div class="atle-footer-contact">
           <h3>Hablemos</h3>
-          <a class="social-link" href="https://www.instagram.com/atle.ve/" id="instagram-link" rel="noopener noreferrer" target="_blank" aria-label="Instagram de ATLE"><svg class="social-icon" viewBox="0 0 24 24" role="img" aria-label="Instagram" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.3"/><circle cx="17.6" cy="6.5" r=".9" fill="currentColor" stroke="none"/></svg><span class="social-label" id="instagram-label">Instagram @atle.ve ↗</span></a>
-          <a class="social-link" href="https://wa.me/584121692665" id="whatsapp-link" rel="noopener noreferrer" target="_blank" aria-label="WhatsApp de ATLE"><svg class="social-icon" viewBox="0 0 24 24" role="img" aria-label="WhatsApp" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.9 11.6a8.9 8.9 0 0 1-13 7.8L3 21l1.6-4.8A8.9 8.9 0 1 1 20.9 11.6Z"/><path d="M8.7 7.9c.3-.4.6-.4.9-.1l1.4 1.8c.2.3.2.5 0 .8l-.7.9c.7 1.3 1.8 2.4 3.2 3.1l.9-.7c.3-.2.5-.2.8 0l1.8 1.3c.4.3.3.6 0 1-.5.7-1.2 1-2.2.9-2.6-.3-5.7-3.3-6.4-5.8-.4-1.4-.3-2.4.3-3.2Z"/></svg><span class="social-label" id="whatsapp-label">WhatsApp +58 412 169 2665 ↗</span></a>
-          <small>Los pedidos se revisan y confirman por WhatsApp.</small>
+          <div class="atle-social-list">
+            <a class="social-link" href="https://www.instagram.com/atle.ve/" id="instagram-link" rel="noopener noreferrer" target="_blank" aria-label="Abrir Instagram de ATLE">
+              <svg class="atle-social-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="2.75" width="18.5" height="18.5" rx="5.4"/><circle cx="12" cy="12" r="4.15"/><circle cx="17.55" cy="6.55" r=".95" fill="currentColor" stroke="none"/></svg>
+              <span class="social-label" id="instagram-label">Instagram @atle.ve ↗</span>
+            </a>
+            <a class="social-link" href="https://wa.me/584121692665" id="whatsapp-link" rel="noopener noreferrer" target="_blank" aria-label="Abrir WhatsApp de ATLE">
+              <svg class="atle-social-icon" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.925c-.002 1.397.365 2.76 1.064 3.964L0 16l4.204-1.102a7.93 7.93 0 0 0 3.79.965h.004c4.367 0 7.926-3.558 7.93-7.925a7.9 7.9 0 0 0-2.327-5.612m-5.607 12.2a6.6 6.6 0 0 1-3.364-.92l-.242-.143-2.495.654.665-2.432-.157-.25a6.56 6.56 0 0 1-1.007-3.5c.003-3.641 2.966-6.603 6.606-6.603a6.56 6.56 0 0 1 4.673 1.936 6.56 6.56 0 0 1 1.93 4.677c-.003 3.64-2.965 6.602-6.609 6.602m3.62-4.947c-.198-.1-1.17-.578-1.35-.644-.181-.066-.313-.1-.446.1-.132.198-.51.644-.625.776-.116.132-.231.148-.429.05-.198-.1-.836-.308-1.592-.982-.588-.524-.985-1.17-1.1-1.368-.116-.198-.013-.305.086-.404.09-.088.198-.231.297-.347.1-.116.132-.198.198-.33.066-.132.033-.248-.017-.347-.05-.1-.446-1.076-.611-1.473-.161-.385-.325-.332-.446-.338-.116-.006-.248-.007-.38-.007s-.347.05-.528.248-.693.677-.693 1.652.71 1.917.81 2.05c.098.132 1.397 2.132 3.385 2.99.473.204.842.326 1.13.417.474.15.905.129 1.246.078.38-.056 1.17-.478 1.335-.941.165-.462.165-.859.116-.941-.05-.083-.181-.132-.38-.231"/></svg>
+              <span class="social-label" id="whatsapp-label">WhatsApp +58 412 169 2665 ↗</span>
+            </a>
+          </div>
+          <p class="atle-contact-note">Los pedidos se revisan y confirman por WhatsApp.</p>
         </div>
       </div>
       <div class="footer-bottom"><span>© <span id="year"></span> ATLE · Hecha para tu ritmo</span><span>Una marca en movimiento</span></div>
