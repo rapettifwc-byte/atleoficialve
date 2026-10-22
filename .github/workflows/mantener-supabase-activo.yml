@@ -1,0 +1,68 @@
+name: ATLE - Mantener Supabase activo
+
+on:
+  schedule:
+    # Dos consultas al día (02:23 y 14:23 UTC).
+    # Venezuela: aproximadamente 10:23 p. m. y 10:23 a. m.
+    - cron: '23 2,14 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  consulta-supabase:
+    name: Consultar base de datos ATLE
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Consultar tabla publica de configuracion
+        env:
+          SUPABASE_URL: ${{ secrets.ATLE_SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.ATLE_SUPABASE_PUBLISHABLE_KEY }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+          import time
+          import urllib.error
+          import urllib.request
+
+          url = os.getenv('SUPABASE_URL', '').strip().rstrip('/')
+          key = os.getenv('SUPABASE_PUBLISHABLE_KEY', '').strip()
+          if not url.startswith('https://') or '.supabase.co' not in url or not key.startswith('sb_publishable_'):
+              sys.exit('ERROR: Revisa ATLE_SUPABASE_URL y ATLE_SUPABASE_PUBLISHABLE_KEY en GitHub Secrets.')
+
+          endpoint = url + '/rest/v1/atle_settings?select=id&limit=1'
+          request = urllib.request.Request(
+              endpoint,
+              headers={'apikey': key, 'Accept': 'application/json'},
+              method='GET'
+          )
+
+          for intento in (1, 2):
+              try:
+                  with urllib.request.urlopen(request, timeout=25) as respuesta:
+                      status = respuesta.status
+                      datos = json.load(respuesta)
+                  if status != 200 or not isinstance(datos, list) or not any(x.get('id') == 1 for x in datos):
+                      sys.exit('ERROR: Supabase respondió, pero la configuración ATLE no está accesible.')
+                  print('OK: Supabase respondió HTTP 200 y la tabla atle_settings devolvió la configuración de ATLE.')
+                  print('Consulta de lectura realizada. No se modificaron productos, fotos ni ajustes.')
+                  break
+              except urllib.error.HTTPError as error:
+                  print(f'Intento {intento}: Supabase respondió HTTP {error.code}.')
+                  if error.code in (401, 403):
+                      sys.exit('ERROR: Clave pública, permisos o configuración de Supabase incorrectos.')
+                  if error.code == 540:
+                      sys.exit('ERROR: Supabase está pausado; reactívalo manualmente desde Supabase Dashboard.')
+                  if intento == 2:
+                      sys.exit('ERROR: La comprobación de Supabase falló dos veces.')
+              except (urllib.error.URLError, TimeoutError, ValueError) as error:
+                  print(f'Intento {intento}: no se pudo completar la petición: {type(error).__name__}')
+                  if intento == 2:
+                      sys.exit('ERROR: No se pudo contactar o interpretar la respuesta de Supabase.')
+              time.sleep(5)
+          PY
