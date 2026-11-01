@@ -71,7 +71,22 @@
  async function store(){
   if(!configured)throw Error(configurationError);
   const [products,settings]=await Promise.all([getProducts(false),getSettings(false)]);
-  return {products:products.filter(p=>p.activo!==false),settings};
+  // Disponibilidad pública opcional: sin el módulo instalado el catálogo sigue igual.
+  let available=null;
+  try{available=await request('/rest/v1/rpc/atle_public_availability',{method:'POST',body:{}})}
+  catch(e){if(!/404|PGRST202|Could not find|does not exist/i.test(e.message))throw e;}
+  const byProduct=new Map();
+  for(const v of available||[]){if(!byProduct.has(v.product_id))byProduct.set(v.product_id,[]);byProduct.get(v.product_id).push(v)}
+  const filtered=products.filter(p=>p.activo!==false).map(p=>{
+   const availability=byProduct.get(p.id);
+   if(!availability)return p; // Sin configuración: conservar el catálogo actual.
+   const copy={...p,colores:(p.colores||[]).map(c=>{
+     const sizes=(c.tallas&&c.tallas.length)?c.tallas:p.tallas;
+     return {...c,tallas:sizes.filter(s=>availability.some(v=>v.color===c.nombre&&v.size===s&&v.available))}
+   }).filter(c=>c.tallas.length>0)};
+   return copy;
+  }).filter(p=>(p.colores||[]).length>0);
+  return {products:filtered,settings};
  }
  function normalizeProduct(p){
   if(!p||typeof p!=='object')throw Error('Datos del producto inválidos.');
@@ -129,10 +144,40 @@
   if(path==='/api/admin/password'&&method==='PUT')return changePassword(payload.actual,payload.nueva);
   throw Error('Función no disponible: '+path);
  }
+ async function readPrivate(table,query=''){
+  const out=[];let offset=0;
+  for(;;){const sep=query?'&':'';const rows=await request('/rest/v1/'+table+'?'+query+sep+'limit=1000&offset='+offset,{auth:true});
+   out.push(...(rows||[]));if(!rows||rows.length<1000)break;offset+=1000;if(offset>200000)throw Error('Demasiados registros para descargar en una sola operación.');
+  }return out;
+ }
+ async function inventoryLoad(){
+  const [products,stock,rows]=await Promise.all([
+   readPrivate('atle_inventory_products','select=*'),readPrivate('atle_inventory_stock','select=*'),readPrivate('atle_inventory_rates','select=*%26id=eq.1'.replace('%26','&'))
+  ]);
+  return {products,stock,rates:rows[0]||{bcv:890,replacement:1000,rounding:.5}};
+ }
+ async function inventorySales(){
+  const [sales,items]=await Promise.all([
+   readPrivate('atle_sales','select=*&order=created_at.desc'),readPrivate('atle_sale_items','select=*&order=id.desc')
+  ]);return {sales,items};
+ }
+ async function inventorySaveProduct(p){
+  return request('/rest/v1/rpc/atle_save_inventory',{method:'POST',auth:true,body:{p_product_id:p.product_id,p_sku:p.sku,p_cost:p.cost,p_usd:p.usd,p_bcv:p.bcv,p_markup:p.markup,p_variants:p.variants}});
+ }
+ async function inventorySaveRates(r){
+  const rows=await request('/rest/v1/atle_inventory_rates?id=eq.1',{method:'PATCH',auth:true,headers:{'Prefer':'return=representation'},body:{bcv:r.bcv,replacement:r.replacement,rounding:r.rounding,updated_at:new Date().toISOString()}});
+  if(!rows?.length)throw Error('No se guardaron las tasas.');return rows[0];
+ }
+ async function inventoryRecordSale(p){
+  return request('/rest/v1/rpc/atle_register_sale',{method:'POST',auth:true,body:{p_request_id:p.request_id,p_currency:p.currency,p_bcv:p.bcv,p_replacement:p.replacement,p_notes:p.notes,p_items:p.items}});
+ }
+ async function inventoryVoidSale(id){return request('/rest/v1/rpc/atle_void_sale',{method:'POST',auth:true,body:{p_sale_id:id}})}
  async function backup(){
   if(!await authorized())throw Error('Inicia sesión para hacer el respaldo.');
   const [products,settings]=await Promise.all([getProducts(true),getSettings(true)]);
-  return {version:10,exportado:new Date().toISOString(),aviso:'Este respaldo JSON contiene productos, ajustes y enlaces de fotografías. Las fotografías originales deben respaldarse por separado desde Supabase Storage.',products,settings};
+  let inventory=null,sales=null;
+  try{[inventory,sales]=await Promise.all([inventoryLoad(),inventorySales()])}catch(e){console.warn('ATLE: respaldo del inventario aún no disponible',e.message)}
+  return {version:11,exportado:new Date().toISOString(),aviso:'Respaldo JSON con catálogo, configuración, inventario y ventas cuando están instalados. Respalda las imágenes originales por separado desde Supabase Storage.',products,settings,inventory,sales};
  }
- window.ATLE_DB={configured,store,api,uploadImage,backup,photoURL(path){if(!path)return '/imagenes/legging_oliva.webp';return /^https?:\/\//i.test(path)?path:'/'+path.replace(/^\//,'')},configurationError};
+ window.ATLE_DB={configured,store,api,uploadImage,backup,inventoryLoad,inventorySales,inventorySaveProduct,inventorySaveRates,inventoryRecordSale,inventoryVoidSale,photoURL(path){if(!path)return '/imagenes/legging_oliva.webp';return /^https?:\/\//i.test(path)?path:'/'+path.replace(/^\//,'')},configurationError};
 })();

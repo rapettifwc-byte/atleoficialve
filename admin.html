@@ -27,7 +27,8 @@
 .checkout-form-preview p{font-size:13px;color:#6C7664;line-height:1.7;margin:5px 0 18px}
 @media(max-width:760px){.checkout-field-card{padding:13px}.checkout-field-top{align-items:flex-start}.checkout-field-controls button{padding:6px 9px}}
 </style>
-<link rel="stylesheet" href="/atle-studio-theme.css?v=15"></head><body>
+<link rel="stylesheet" href="/atle-studio-theme.css?v=15"><link rel="stylesheet" href="/atle-inventory.css?v=1">
+</head><body>
 <div id="app-loading" class="loading">Preparando ATLE Studio…</div>
 <div id="screen-auth" class="auth-wrap" hidden>
  <aside class="auth-art"><img src="logos/ATLE_full_blanco.png" alt="ATLE"><p>Tu marca, bajo tu control.</p><small>ATLE STUDIO · PANEL PRIVADO</small></aside>
@@ -56,6 +57,8 @@
   <nav class="side-nav" aria-label="Administración">
    <button class="nav-link active" data-view="resumen"><span class="ico">▦</span> Resumen</button>
    <button class="nav-link" data-view="productos"><span class="ico">◫</span> Productos</button>
+   <button class="nav-link" data-view="inventario"><span class="ico">▤</span> Inventario</button>
+   <button class="nav-link" data-view="ventas"><span class="ico">▣</span> Registrar ventas</button>
    <button class="nav-link" data-view="inicio"><span class="ico">⌂</span> Página de inicio</button>
    <button class="nav-link" data-view="formulario"><span class="ico">☷</span> Formulario de compra</button>
    <button class="nav-link" data-view="pedidos"><span class="ico">◇</span> Pagos y WhatsApp</button>
@@ -76,6 +79,22 @@
     <div class="view-head"><div><span class="overline">Tu colección</span><h2>Productos</h2><p>Agrega, edita o retira prendas sin usar código.</p></div><button class="btn" id="new-product">+ Agregar producto</button></div>
     <div class="products-bar"><input class="form-control" type="search" id="admin-product-search" placeholder="Buscar por nombre o categoría..."><button class="btn secondary" id="refresh-products">Actualizar lista ↻</button></div>
     <div class="panel"><div class="panel-body" style="overflow-x:auto"><table class="product-table"><thead><tr><th>Prenda</th><th>Precio</th><th>Categoría</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="product-table-body"></tbody></table></div></div>
+   </section>
+   <section id="view-inventario" class="admin-view" hidden>
+    <div class="view-head"><div><span class="overline">Control privado · ATLE</span><h2>Inventario</h2><p>Mismos productos de tu catálogo, con SKU por modelo, stock por talla y color, y precios internos.</p></div><button type="button" class="btn secondary" id="inv-reload">Actualizar ↻</button></div>
+    <div class="panel-note" id="inv-notice" hidden></div>
+    <div class="panel"><div class="panel-head"><h3>Tasas de precios</h3></div><div class="panel-body"><div class="inv-rate-fields"><label>BCV (Bs/$)<input id="inv-rates-bcv" class="form-control" type="number" step="0.0001" min="0.0001" value="890"></label><label>Reposición (Bs/$)<input id="inv-rates-replacement" class="form-control" type="number" step="0.0001" min="0.0001" value="1000"></label><label>Redondeo<select class="form-control" id="inv-rounding"><option value="0">Sin redondeo ($0,01)</option><option value="0.5" selected>Hacia arriba $0,50</option><option value="1">Hacia arriba $1</option></select></label><button type="button" class="btn" id="inv-rates-save">Guardar tasas</button></div><p class="help">Las tasas se usan para calcular nuevos precios y registrar nuevas ventas. No modifican ventas anteriores.</p></div></div>
+    <div class="panel"><div class="panel-head"><h3>Tu colección</h3><button type="button" class="btn secondary compact" id="inv-export-inventory">↓ Exportar inventario para Excel</button></div><div class="panel-body"><input id="inv-search" class="form-control" type="search" placeholder="Buscar por producto o SKU" style="max-width:410px;margin-bottom:16px"><p id="inv-count" class="help"></p><div style="overflow-x:auto"><table class="product-table"><thead><tr><th>Modelo / SKU</th><th>Unidades</th><th>Costo</th><th>Divisas</th><th>BCV</th><th>Editar</th></tr></thead><tbody id="inv-table"></tbody></table></div></div></div>
+    <div class="panel"><div class="panel-head"><h3>Gestionar modelo</h3></div><div class="panel-body"><div class="field"><label>Selecciona un producto existente del catálogo</label><select class="form-control" id="inv-product-choice"><option value="">Selecciona un modelo…</option></select></div>
+      <form id="inv-product-form" hidden><div class="panel-note" id="inv-sync-note"></div><h3 id="inv-title" class="inv-mini-title"></h3>
+      <div class="two-col"><div class="field"><label>SKU privado del modelo</label><input id="inv-sku" class="form-control" required minlength="2" maxlength="40" pattern="[A-Za-z0-9][A-Za-z0-9_-]{1,39}"></div><div class="field"><label>Costo de compra por unidad ($)</label><input id="inv-cost" class="form-control" type="number" min="0" step="0.01" required></div><div class="field"><label>% ganancia sobre costo</label><input id="inv-markup" class="form-control" type="number" min="0" max="10000" step="0.01" required></div><div class="field" style="justify-content:end"><button type="button" id="inv-calculate" class="btn secondary">Calcular precios ↗</button></div><div class="field"><label>Precio de venta en divisas ($)</label><input id="inv-usd" class="form-control" type="number" min="0" step="0.01" required></div><div class="field"><label>Precio referencia público a BCV ($)</label><input id="inv-bcv" class="form-control" type="number" min="0" step="0.01" required></div></div>
+      <h3 class="inv-mini-title">Unidades disponibles por color y talla</h3><div id="inv-stock-grid" class="inv-stock-grid"></div><div class="inv-totals"><span>Total: <strong id="inv-product-total">0</strong> unidades</span><span>Costo de existencias: <strong id="inv-product-value">$0,00</strong></span></div><p class="help" id="inv-estimated"></p><div class="form-actions"><button type="submit" id="inv-save-product" class="btn">Guardar SKU, precios y existencias ✓</button></div>
+      </form></div></div>
+   </section>
+   <section id="view-ventas" class="admin-view" hidden>
+    <div class="view-head"><div><span class="overline">Ventas cerradas por WhatsApp</span><h2>Registrar venta</h2><p>Agrega varios artículos a una sola venta. El stock solo se descuenta al confirmar manualmente.</p></div></div>
+    <div class="panel"><div class="panel-head"><h3>Nueva venta</h3></div><div class="panel-body"><form id="inv-sale-form"><div class="field"><label>Forma de pago</label><select id="inv-sale-currency" class="form-control"><option value="USD">Divisas (USD)</option><option value="VES">Bolívares a BCV (Bs)</option></select></div><div id="inv-lines"></div><button id="inv-add-line" type="button" class="btn secondary compact">+ Añadir producto a esta venta</button><div class="field" style="margin-top:20px"><label>Notas de esta venta (opcional)</label><textarea id="inv-sale-notes" class="form-control" maxlength="2000" rows="3" placeholder="Entrega, cliente, descuento, observaciones…"></textarea></div><div class="inv-sale-summary"><span id="inv-sale-count">0 unidad(es)</span><strong>Total: <span id="inv-sale-total">$0,00</span></strong></div><p class="help">El precio unitario se propone automáticamente, pero puedes ajustarlo para registrar lo cobrado realmente. La venta guarda las tasas BCV y reposición del momento.</p><div class="form-actions"><button type="submit" id="inv-confirm-sale" class="btn">Confirmar y descontar existencias ✓</button></div></form></div></div>
+    <div class="panel"><div class="panel-head"><h3>Historial de ventas</h3><button type="button" class="btn secondary compact" id="inv-export-sales">↓ Exportar ventas para Excel</button></div><div class="panel-body"><p class="help">Las anulaciones quedan registradas y devuelven las unidades al inventario.</p><div style="overflow-x:auto"><table class="product-table"><thead><tr><th>Fecha</th><th>Total</th><th>Artículos</th><th>Notas</th><th>Acción</th></tr></thead><tbody id="inv-sale-table"></tbody></table></div></div></div>
    </section>
    <section id="view-inicio" class="admin-view" hidden>
     <div class="view-head"><div><span class="overline">Personaliza tu tienda</span><h2>Página de inicio</h2><p>Los cambios se reflejan en los textos y fotografías de tu web.</p></div><button class="btn" form="homepage-form" type="submit">Guardar cambios ✓</button></div>
@@ -147,5 +166,5 @@
  <div class="form-actions"><button class="btn secondary" type="button" id="cancel-product">Cancelar</button><button class="btn" type="submit" id="save-product">Guardar producto ✓</button></div>
 </form></dialog>
 <div class="toast" id="atle-toast" role="status" aria-live="polite"></div>
-<script src="/configuracion.js" defer></script><script src="/atle-data.js?v=15" defer></script><script src="/formulario-pedido.js?v=12" defer></script><script src="/admin.js?v=13" defer></script>
+<script src="/configuracion.js" defer></script><script src="/atle-data.js?v=16" defer></script><script src="/formulario-pedido.js?v=12" defer></script><script src="/admin.js?v=14" defer></script><script src="/atle-inventory.js?v=1" defer></script>
 </body></html>

@@ -32,13 +32,14 @@ async function loadAdmin(){
   const [p,c]=await Promise.all([api('/api/admin/products'),api('/api/admin/settings')]);
   state.products=p.products;state.settings=window.ATLE_FORM.upgradeSettings(c.settings);
   renderDashboard();renderProductList();fillHome();fillOrders();fillCheckoutEditor();navigate(state.view);
+  if(window.ATLE_INVENTORY)await window.ATLE_INVENTORY.init();
  }catch(err){toast(err.message,true)}
 }
 function navigate(view){
  state.view=view;
  $$('.admin-view').forEach(v=>v.hidden=(v.id!=='view-'+view));
  $$('.nav-link').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
- const labels={resumen:'Resumen',productos:'Productos',inicio:'Página de inicio',pedidos:'Pagos y WhatsApp',formulario:'Formulario de compra',seguridad:'Cuenta y respaldo'};
+ const labels={resumen:'Resumen',productos:'Productos',inventario:'Inventario',ventas:'Registrar ventas',inicio:'Página de inicio',pedidos:'Pagos y WhatsApp',formulario:'Formulario de compra',seguridad:'Cuenta y respaldo'};
  $('#breadcrumb').textContent=labels[view]||'';
  $('#sidebar').classList.remove('open');window.scrollTo({top:0,behavior:'instant'});
 }
