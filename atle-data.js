@@ -162,14 +162,14 @@
   ]);return {sales,items};
  }
  async function inventorySaveProduct(p){
-  return request('/rest/v1/rpc/atle_save_inventory',{method:'POST',auth:true,body:{p_product_id:p.product_id,p_sku:p.sku,p_cost:p.cost,p_usd:p.usd,p_bcv:p.bcv,p_markup:p.markup,p_variants:p.variants}});
+  return request('/rest/v1/rpc/atle_save_inventory_v2',{method:'POST',auth:true,body:{p_product_id:p.product_id,p_sku:p.sku,p_cost:p.cost,p_logistics:p.logistics,p_usd:p.usd,p_bcv:p.bcv,p_markup:p.markup,p_reference:p.reference,p_use_cover:p.useCover,p_variants:p.variants}});
  }
  async function inventorySaveRates(r){
   const rows=await request('/rest/v1/atle_inventory_rates?id=eq.1',{method:'PATCH',auth:true,headers:{'Prefer':'return=representation'},body:{bcv:r.bcv,replacement:r.replacement,rounding:r.rounding,updated_at:new Date().toISOString()}});
   if(!rows?.length)throw Error('No se guardaron las tasas.');return rows[0];
  }
  async function inventoryRecordSale(p){
-  return request('/rest/v1/rpc/atle_register_sale',{method:'POST',auth:true,body:{p_request_id:p.request_id,p_currency:p.currency,p_bcv:p.bcv,p_replacement:p.replacement,p_notes:p.notes,p_items:p.items}});
+  return request('/rest/v1/rpc/atle_register_sale_v2',{method:'POST',auth:true,body:{p_request_id:p.request_id,p_currency:p.currency,p_notes:p.notes,p_items:p.items}});
  }
  async function inventoryVoidSale(id){return request('/rest/v1/rpc/atle_void_sale',{method:'POST',auth:true,body:{p_sale_id:id}})}
  async function backup(){

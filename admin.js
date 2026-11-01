@@ -61,10 +61,18 @@ function renderProductList(){
 }
 async function reloadProducts(){const data=await api('/api/admin/products');state.products=data.products;renderProductList();renderDashboard()}
 function photoURL(path){return window.ATLE_DB.photoURL(path)}
-function editorDefaults(){return {id:null,nombre:'',categoria:'Leggings',precio:0,imagen:'',imagenes:[],descripcion:'',colores:[{nombre:'Negro',hex:'#292929',imagen:'',imagenes:[],tallas:[]}],tallas:['S','M','L'],etiqueta:'',activo:true,destacado:false}}
+function editorDefaults(){return {id:null,nombre:'',categoria:'Leggings',precio:0,imagen:'',imagenes:[],descripcion:'',colores:[{nombre:'Negro',hex:'#292929',imagen:'',imagenes:[],tallas:[]}],tallas:['S','M','L'],etiqueta:'',activo:false,destacado:false}}
 function openEditor(p){
  state.editing=structuredClone(p||editorDefaults());
  $('#editor-title').textContent=p?'Editar producto':'Crear nuevo producto';
+ const rec=window.ATLE_INVENTORY?.getInfo(state.editing.id);
+ $('#product-sku').value=rec?.sku||'';
+ $('#product-sku-hint').textContent=rec?'SKU privado vinculado · Los colores y tallas se administran en Inventario. Puedes editar el título y cargar fotos.':'Primero registra o configura el modelo en Inventario, después escribe su SKU aquí y pulsa «Vincular SKU». No será público.';
+ const linked=!!rec?.stock_enabled;
+ $('#add-color').hidden=linked;
+ $('#product-color-hint').textContent=linked?'Colores y tallas sincronizados desde Inventario. Aquí puedes subir las fotografías y escoger el tono visual.':'Para crear un modelo nuevo primero configúralo en Inventario.';
+ $('#product-price').readOnly=linked;
+ $('#product-sizes').readOnly=linked;
  $('#product-name').value=state.editing.nombre;
  $('#product-category').value=state.editing.categoria;
  $('#product-price').value=state.editing.precio;
@@ -75,17 +83,17 @@ function openEditor(p){
  $('#product-cover-preview').src=photoURL(state.editing.imagen);
  $('#product-cover-file').value='';$('#product-gallery-file').value='';
  $('#cover-status').textContent='';$('#gallery-status').textContent='';
- drawEditorGallery();renderColors();$('#product-dialog').showModal();
+ drawEditorGallery();renderColors();if(!$('#product-dialog').open)$('#product-dialog').showModal();
 }
 function drawEditorGallery(){
  $('#product-cover-preview').src=photoURL(state.editing.imagen);
  $('#product-gallery').innerHTML=(state.editing.imagenes||[]).map((path,i)=>`<div class="thumb"><img src="${escapeHTML(photoURL(path))}" alt="Foto ${i+1}"><button type="button" data-remove-gallery="${i}" aria-label="Quitar fotografía">×</button></div>`).join('');
 }
-function colorMarkup(c,i){return `<article class="color-card" data-color-index="${i}">
-  <div class="color-card-title"><strong style="font-size:13px;color:#495642">Color ${i+1}</strong><button class="btn tiny warn" type="button" data-remove-color="${i}">Eliminar color ×</button></div>
-  <div class="color-fields"><div class="field"><label>Nombre del color *</label><input class="form-control small" data-color-prop="nombre" value="${escapeHTML(c.nombre)}" maxlength="50" placeholder="Ej. Negro"></div>
+function colorMarkup(c,i){const locked=!!window.ATLE_INVENTORY?.getInfo(state.editing.id)?.stock_enabled;return `<article class="color-card" data-color-index="${i}">
+  <div class="color-card-title"><strong style="font-size:13px;color:#495642">Color ${i+1}</strong><button class="btn tiny warn" type="button" data-remove-color="${i}" ${locked?'disabled title="Colores administrados desde Inventario"':''}>Eliminar color ×</button></div>
+  <div class="color-fields"><div class="field"><label>Nombre del color *</label><input class="form-control small" data-color-prop="nombre" value="${escapeHTML(c.nombre)}" maxlength="50" ${locked?'readonly':''} placeholder="Ej. Negro"></div>
   <div class="field"><label>Tono</label><input type="color" class="form-control small" data-color-prop="hex" value="${escapeHTML(c.hex)}" aria-label="Elegir tono"></div>
-  <div class="field"><label>Tallas de este color <span class="hint">Opcional, separadas por comas</span></label><input class="form-control small" data-color-prop="tallas" value="${escapeHTML((c.tallas||[]).join(', '))}" placeholder="S, M (o vacío: todas)"></div></div>
+  <div class="field"><label>Tallas de este color <span class="hint">Opcional, separadas por comas</span></label><input class="form-control small" data-color-prop="tallas" value="${escapeHTML((c.tallas||[]).join(', '))}" ${locked?'readonly':''} placeholder="S, M (o vacío: todas)"></div></div>
   <div class="two-col"><div class="upload-zone"><p class="upload-head">Fotografía destacada de este color</p><img src="${escapeHTML(photoURL(c.imagen||state.editing.imagen))}" alt="Foto de color"><input class="file-input" type="file" accept="image/png,image/jpeg,image/webp" data-color-cover="${i}"><div class="upload-status">${c.imagen?'Foto personalizada cargada':'Usa la foto principal hasta que subas una'}</div></div>
   <div class="upload-zone"><p class="upload-head">Galería de este color (opcional)</p><div class="thumbs">${(c.imagenes||[]).map((u,j)=>`<div class="thumb"><img src="${escapeHTML(photoURL(u))}" alt=""><button type="button" data-color-gallery-remove="${i}:${j}" aria-label="Eliminar fotografía">×</button></div>`).join('')}</div><input class="file-input" type="file" accept="image/png,image/jpeg,image/webp" data-color-gallery="${i}" multiple></div></div>
   </article>`}
@@ -211,6 +219,16 @@ $$('[data-view]').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dat
 $$('[data-go]').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dataset.go)));
 $('#admin-product-search').addEventListener('input',renderProductList);
 $('#new-product').addEventListener('click',()=>openEditor(null));
+$('#product-sku-load').addEventListener('click',()=>{
+ const sku=$('#product-sku').value.trim(),inv=window.ATLE_INVENTORY;
+ const record=inv?.bySku(sku);
+ if(!record)return toast('SKU no encontrado. Primero crea y guarda ese modelo en Inventario.',true);
+ const model=state.products.find(p=>p.id===record.product_id);
+ if(!model)return toast('No se encontró el producto relacionado. Actualiza Productos.',true);
+ if(state.editing?.id && state.editing.id!==model.id && !confirm('Se reemplazará el formulario actual por el producto de ese SKU. ¿Continuar?'))return;
+ openEditor(model);
+ toast('Modelo vinculado. Puedes editar el título, subir las fotos y publicar.');
+});
 $('#refresh-products').addEventListener('click',async()=>{try{await reloadProducts();toast('Productos actualizados.')}catch(e){toast(e.message,true)}});
 $('#close-product').addEventListener('click',()=>$('#product-dialog').close());
 $('#cancel-product').addEventListener('click',()=>$('#product-dialog').close());
@@ -223,11 +241,11 @@ $('#product-table-body').addEventListener('click',async e=>{
  try{
   b.disabled=true;
   if(b.dataset.delete){await api('/api/admin/products/'+encodeURIComponent(id),'DELETE');toast('Producto eliminado.');}
-  else{await api('/api/admin/products/'+encodeURIComponent(id),'PUT',{...p,activo:p.activo===false});toast('Visibilidad actualizada.');}
+  else{if(p.activo===false&&!window.ATLE_INVENTORY?.getInfo(id)?.stock_enabled)throw Error('Primero configura este modelo en Inventario para poder publicarlo.');if(p.activo===false&&!p.imagen&&!(p.colores||[]).some(c=>c.imagen))throw Error('Primero sube una fotografía de portada en Productos antes de publicarlo.');await api('/api/admin/products/'+encodeURIComponent(id),'PUT',{...p,activo:p.activo===false});toast('Visibilidad actualizada.');}
   await reloadProducts();
  }catch(err){toast(err.message,true);b.disabled=false}
 });
-$('#add-color').addEventListener('click',()=>{if(state.editing.colores.length>=30)return toast('Puedes tener hasta 30 colores.',true);state.editing.colores.push({nombre:'',hex:'#7B8B68',imagen:'',imagenes:[],tallas:[]});renderColors();const last=$$('#editor-colors [data-color-prop="nombre"]').at(-1);last?.focus()});
+$('#add-color').addEventListener('click',()=>{if(window.ATLE_INVENTORY?.getInfo(state.editing?.id)?.stock_enabled)return toast('Añade colores desde Inventario.',true);if(state.editing.colores.length>=30)return toast('Puedes tener hasta 30 colores.',true);state.editing.colores.push({nombre:'',hex:'#7B8B68',imagen:'',imagenes:[],tallas:[]});renderColors();const last=$$('#editor-colors [data-color-prop="nombre"]').at(-1);last?.focus()});
 $('#editor-colors').addEventListener('input',e=>{
  const input=e.target.closest('[data-color-prop]');if(!input)return;
  const index=Number(input.closest('[data-color-index]').dataset.colorIndex);
@@ -237,7 +255,7 @@ $('#editor-colors').addEventListener('input',e=>{
 $('#editor-colors').addEventListener('click',e=>{
  const remove=e.target.closest('[data-remove-color]');
  const gallery=e.target.closest('[data-color-gallery-remove]');
- if(remove){if(state.editing.colores.length<=1)return toast('Debes conservar al menos un color.',true);state.editing.colores.splice(Number(remove.dataset.removeColor),1);renderColors()}
+ if(remove){if(window.ATLE_INVENTORY?.getInfo(state.editing?.id)?.stock_enabled)return toast('Las variantes se editan desde Inventario.',true);if(state.editing.colores.length<=1)return toast('Debes conservar al menos un color.',true);state.editing.colores.splice(Number(remove.dataset.removeColor),1);renderColors()}
  if(gallery){const [c,i]=gallery.dataset.colorGalleryRemove.split(':').map(Number);state.editing.colores[c].imagenes.splice(i,1);renderColors()}
 });
 $('#editor-colors').addEventListener('change',async e=>{
@@ -260,7 +278,23 @@ $('#product-gallery-file').addEventListener('change',async e=>{const files=[...e
 $('#product-form').addEventListener('submit',async e=>{
  e.preventDefault();const b=$('#save-product');if(b.disabled)return;
  const p=collectEditor();
- if(!p.tallas.length)return toast('Agrega al menos una talla, por ejemplo S, M, L.',true);
+ const inv=window.ATLE_INVENTORY;
+ const original=state.products.find(x=>x.id===p.id);
+ const linked=!!inv?.getInfo(p.id)?.stock_enabled;
+ if(!linked&&(!original||(p.activo&&original.activo===false)))return toast('Para publicar un modelo nuevo, primero configura el SKU y las existencias en Inventario.',true);
+ if(linked){
+  const record=inv.getInfo(p.id);
+  if($('#product-sku').value.trim().toUpperCase()!==record.sku)return toast('El SKU no coincide con el modelo vinculado. Pulsa «Vincular SKU».',true);
+  p.precio=Number(record.price_bcv);
+  const inventoryVariants=inv.variants(p.id);
+  const colors=[...new Set(inventoryVariants.map(v=>v.color))];
+  const currentColors=new Map((p.colores||[]).map(c=>[c.nombre,c]));
+  p.colores=colors.map(color=>({...currentColors.get(color),nombre:color,hex:currentColors.get(color)?.hex||'#777777',imagen:currentColors.get(color)?.imagen||'',imagenes:currentColors.get(color)?.imagenes||[],tallas:inventoryVariants.filter(v=>v.color===color).map(v=>v.size)}));
+  p.tallas=[...new Set(inventoryVariants.map(v=>v.size))];
+  if(!p.tallas.length)return toast('Configura primero las tallas en Inventario.',true);
+  if(p.activo&&!p.imagen&&!(p.colores||[]).some(c=>c.imagen))return toast('Para publicar, primero sube la foto de portada del producto.',true);
+ }
+ if(!p.tallas.length)return toast('Agrega al menos una talla.',true);
  if(!p.colores.length || p.colores.some(c=>!c.nombre.trim()))return toast('Cada color necesita un nombre.',true);
  try{b.disabled=true;b.textContent='Guardando...';
   if(p.id)await api('/api/admin/products/'+encodeURIComponent(p.id),'PUT',p);

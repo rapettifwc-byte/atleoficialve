@@ -1,2 +1,24 @@
-/* Módulo privado de inventario: no se carga en la tienda pública. */
-.inv-rate-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:12px;align-items:end}.inv-rate-fields label,.inv-line-fields label{display:grid;gap:7px;font-size:12px;font-weight:650;color:#55604e}.inv-mini-title{font:400 23px Georgia,serif;margin:16px 0;color:var(--olive)}.inv-stock-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:9px}.inv-stock-row{display:grid;grid-template-columns:1fr auto 86px;align-items:center;gap:10px;background:#f7f8f5;border:1px solid #e3e6dd;border-radius:9px;padding:8px 10px;font-size:13px}.inv-stock-row span:nth-child(2){font-weight:700}.inv-totals,.inv-sale-summary{display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;background:#f2f4ef;padding:14px 17px;border-radius:11px;margin:18px 0;font-size:13px}.inv-sale-summary strong{font-size:17px}.inv-line{background:#fcfcfb;border:1px solid #e3e6dd;border-radius:12px;padding:15px;margin-bottom:12px}.inv-line-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.inv-line-fields{display:grid;grid-template-columns:minmax(170px,1.5fr) repeat(2,minmax(100px,1fr)) 85px 145px;gap:10px}.inv-stock-hint{color:#758072;margin-top:8px;display:block}@media(max-width:1020px){.inv-rate-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.inv-line-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:540px){.inv-rate-fields,.inv-line-fields{grid-template-columns:1fr 1fr}.inv-line-fields label:first-child{grid-column:1/-1}.inv-rate-fields button{grid-column:1/-1}.inv-stock-grid{grid-template-columns:1fr}.inv-sale-summary{align-items:flex-start;flex-direction:column}.inv-line-fields input,.inv-line-fields select{font-size:16px}}
+/* ATLE Studio · funciones privadas, sin estilos públicos */
+.inv-mini-title{font:400 23px Georgia,serif;margin:16px 0;color:var(--olive)}
+.inv-stock-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:9px}
+.inv-stock-row{display:grid;grid-template-columns:minmax(65px,1fr) auto 85px 32px;align-items:center;gap:9px;background:#f7f8f5;border:1px solid #e3e6dd;border-radius:9px;padding:8px 10px;font-size:13px}
+.inv-stock-row span:nth-child(2){font-weight:700}
+.inv-totals,.inv-sale-summary{display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;background:#f2f4ef;padding:14px 17px;border-radius:11px;margin:18px 0;font-size:13px}
+.inv-sale-summary strong{font-size:17px}
+.inv-line{background:#fcfcfb;border:1px solid #e3e6dd;border-radius:12px;padding:15px;margin-bottom:12px}
+.inv-line-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.inv-line-fields{display:grid;grid-template-columns:minmax(170px,1.5fr) repeat(2,minmax(100px,1fr)) 85px 145px;gap:10px}
+.inv-line-fields label{display:grid;gap:7px;font-size:12px;font-weight:650;color:#55604e}
+.inv-stock-hint{color:#758072;margin-top:8px;display:block}
+.inv-variant-add{display:grid;grid-template-columns:1.4fr 1fr 100px auto;gap:10px;align-items:end;margin:15px 0}
+.inv-variant-add label{display:grid;gap:7px;font-size:12px;font-weight:650;color:#55604e}
+.inv-ref-wrap{display:flex;gap:16px;align-items:center;margin:16px 0}
+.inv-ref-wrap img{width:94px;height:112px;object-fit:cover;background:#ecece6;border-radius:6px;border:1px solid #e0e2db}
+.inv-ref-wrap .field{flex:1}
+.inv-new-model{margin:12px 0 24px;padding:16px;border:1px solid #e0e3db;border-radius:10px;background:#f9faf7}
+.inv-sku-help{font-size:12px;color:#687061;margin:6px 0 13px}
+.inv-locked-control{opacity:.72;cursor:not-allowed}
+@media(max-width:1020px){.inv-line-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.inv-variant-add{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.inv-line-fields{grid-template-columns:1fr 1fr}.inv-line-fields label:first-child{grid-column:1/-1}.inv-variant-add{grid-template-columns:1fr 1fr}.inv-variant-add label:first-child{grid-column:1/-1}.inv-variant-add button{grid-column:1/-1}.inv-stock-grid{grid-template-columns:1fr}.inv-sale-summary{align-items:flex-start;flex-direction:column}.inv-line-fields input,.inv-line-fields select,.inv-variant-add input{font-size:16px}}
+
+.inv-photo-empty{width:80px;min-width:70px;min-height:74px;display:flex;align-items:center;justify-content:center;background:#f0f1ec;color:#7b8377;border:1px dashed #ced2c8;border-radius:6px;text-align:center;font-size:11px;padding:7px}
