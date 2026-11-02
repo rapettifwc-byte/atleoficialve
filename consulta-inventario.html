@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+ <meta name="robots" content="noindex,nofollow,noarchive">
+ <meta name="theme-color" content="#f9f9f7">
+ <title>ATLE · Consulta privada de inventario</title>
+ <link rel="icon" href="/logos/ATLE_symbol_negro.svg" type="image/svg+xml">
+ <link rel="stylesheet" href="/consulta-inventario.css">
+ <script src="/consulta-inventario.js" defer></script>
+</head>
+<body>
+ <main class="layout">
+  <header class="brand-header" aria-label="ATLE">
+   <div class="brand-top"><img src="/logos/ATLE_symbol_negro.svg" class="brand-logo" alt="Símbolo original de ATLE"><span class="brand-label">ACCESO PRIVADO</span></div>
+   <div class="divider"></div>
+  </header>
+  <section id="access-screen" class="access-screen">
+   <div class="access-card">
+    <span class="eyebrow">ATLE · INVENTARIO</span>
+    <h1>Consulta tus existencias.</h1>
+    <p>Accede al inventario de tu tienda de forma rápida y segura, desde donde estés.</p>
+    <form id="login-form">
+     <label for="pin">PIN de acceso</label>
+     <input id="pin" name="pin" type="password" inputmode="numeric" pattern="[0-9]{6}" autocomplete="off" maxlength="6" minlength="6" placeholder="••••••" required aria-describedby="pin-info">
+     <small id="pin-info">6 dígitos · Acceso de solo lectura</small>
+     <button id="login-button" type="submit">Entrar al inventario <span aria-hidden="true">↗</span></button>
+    </form>
+    <p id="login-error" class="message error" role="alert" hidden></p>
+    <div class="access-bottom"><span class="dot"></span> Sesión privada temporal</div>
+   </div>
+  </section>
+  <section id="inventory-screen" hidden>
+   <div class="page-heading">
+    <div><span class="eyebrow">CONSULTA · SOLO LECTURA</span><h1>Inventario.</h1><p>Consulta productos, tallas, colores, existencias y precio BCV.</p></div>
+    <div class="page-actions"><button id="refresh-button" type="button" class="outline-btn">Actualizar ↻</button><button id="logout-button" type="button" class="text-btn">Salir</button></div>
+   </div>
+   <div class="stat-grid">
+    <div class="stat"><span>Modelos registrados</span><strong id="count-models">—</strong></div>
+    <div class="stat"><span>Unidades en inventario</span><strong id="count-units">—</strong></div>
+    <div class="stat"><span>Combinaciones agotadas</span><strong id="count-empty">—</strong></div>
+   </div>
+   <div class="filters">
+    <div class="search-wrap"><span aria-hidden="true">⌕</span><label class="sr-only" for="search">Buscar por nombre o SKU</label><input id="search" type="search" placeholder="Buscar por modelo o SKU…" autocomplete="off"></div>
+    <label class="check-wrap"><input id="only-available" type="checkbox"> Solo con existencias</label>
+   </div>
+   <div class="table-meta"><span id="results-count">Mostrando inventario</span><span id="updated-at">—</span></div>
+   <p id="inventory-error" class="message error" hidden role="alert"></p>
+   <div id="product-list" class="product-grid" aria-live="polite"></div>
+   <div id="empty-results" class="empty-results" hidden>No encontramos productos con esos filtros.</div>
+  </section>
+  <footer class="footer"><span>ATLE</span><span>Consulta privada · Sin permisos de edición</span></footer>
+ </main>
+</body>
+</html>
