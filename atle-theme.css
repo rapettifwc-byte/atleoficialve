@@ -87,3 +87,42 @@ dialog::backdrop{background:rgba(0,0,0,.67)}
 .social-icon{width:21px;height:21px;flex:0 0 21px;display:block;color:#fff}
 .social-label{overflow-wrap:anywhere}
 @media(max-width:550px){.footer a.social-link{min-height:44px;font-size:13px}.social-icon{width:22px;height:22px;flex-basis:22px}}
+
+
+/* ATLE v16 · Portada adaptable, precios BCV y galerías completas por color. */
+.hero-media{background:#D3C9D2}
+.hero-media .hero-picture{position:absolute;inset:0;display:block;width:100%;height:100%}
+.hero-media .hero-picture img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;background:#D3C9D2}
+
+/* Fotografía de producto: encuadre completo, sin cortar prendas. */
+.product-photo{aspect-ratio:4/5;background:#F6F6F6;position:relative;display:block}
+.product-photo-main{position:absolute;inset:0;display:block;width:100%;height:100%;padding:0;border:0;background:transparent;overflow:hidden}
+.product-photo-main img{width:100%;height:100%;object-fit:contain;object-position:center;background:#F6F6F6;transition:opacity .2s ease,transform .2s ease}
+.product-photo:hover .product-photo-main img{transform:none}
+.product-photo-arrow{position:absolute;z-index:3;top:50%;transform:translateY(-50%);width:34px;height:34px;display:grid;place-items:center;border:1px solid #E4E4E4;border-radius:50%;background:rgba(255,255,255,.94);color:#111;font-size:23px;line-height:1;box-shadow:0 3px 12px #00000012;transition:background .18s,opacity .18s}
+.product-photo-arrow:hover{background:#111;color:#fff;border-color:#111}
+.product-photo-arrow.is-prev{left:10px}.product-photo-arrow.is-next{right:10px}
+.product-photo-count{position:absolute;z-index:3;right:10px;bottom:10px;padding:5px 8px;border-radius:20px;background:rgba(255,255,255,.94);color:#222;font-size:10px;letter-spacing:.04em;pointer-events:none}
+.product-photo .tag{z-index:4}
+.bcv-note{margin:-5px 0 0;color:#666;font-size:10px;line-height:1.45;letter-spacing:.005em}
+.cart-foot>.bcv-note{margin:-7px 0 14px;text-align:right}
+.checkout-bcv-note{margin:-7px 0 14px;text-align:right}
+.detail-meta>.bcv-note{margin:-7px 0 0}
+.detail-gallery>.detail-main-img{display:block;width:100%;height:auto;max-height:none;aspect-ratio:4/5;object-fit:contain;object-position:center;background:#F6F6F6}
+.detail-thumbs{display:flex;flex-wrap:nowrap;gap:9px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;padding:10px 2px 12px}
+.detail-thumbs button{position:relative;flex:0 0 58px;width:58px;height:73px;scroll-snap-align:start;background:#F6F6F6}
+.detail-thumbs img{display:block;width:100%;height:100%;object-fit:contain;background:#F6F6F6}
+.more-products-btn:not(.ghost){background:#111;color:#fff;border:1px solid #111;min-height:54px;padding-inline:34px;box-shadow:0 7px 20px #00000016;letter-spacing:.025em}
+.more-products-btn:not(.ghost):hover{background:#333;border-color:#333;box-shadow:0 10px 24px #00000020;transform:translateY(-2px)}
+.more-products-btn:not(.ghost) span{display:inline-block;animation:atleCatalogArrow 3.2s ease-in-out infinite}
+@keyframes atleCatalogArrow{0%,76%,100%{transform:translateX(0)}84%{transform:translateX(4px)}}
+@media(hover:hover){.product-photo-arrow{opacity:0}.product-photo:hover .product-photo-arrow,.product-photo:focus-within .product-photo-arrow{opacity:1}}
+@media(max-width:700px){
+ .hero-media{min-height:0!important;max-height:none!important;height:auto;aspect-ratio:4/5}
+ .hero-media .hero-picture img{object-fit:contain}
+ .product-photo{aspect-ratio:4/5}
+ .product-photo-arrow{opacity:.96;width:32px;height:32px}
+ .detail-gallery>.detail-main-img{height:auto}
+}
+@media(max-width:500px){.product-photo{aspect-ratio:4/5}.product-photo-main img{object-fit:contain}.product-photo-arrow.is-prev{left:7px}.product-photo-arrow.is-next{right:7px}}
+@media(prefers-reduced-motion:reduce){.more-products-btn:not(.ghost) span{animation:none!important}}

@@ -1,0 +1,82 @@
+ATLE · ACTUALIZACIÓN V16 · PORTADA, BCV Y GALERÍAS
+==================================================
+
+QUÉ INCLUYE
+1. Portada fija en el código con dos versiones WEBP:
+   - imagenes/ATLE_portada_desktop.webp
+   - imagenes/ATLE_portada_mobile.webp
+   En móviles se sirve la versión vertical. La fotografía principal ya no se puede cambiar desde ATLE Studio.
+   Los textos de portada continúan siendo editables desde el panel.
+
+2. Aviso de precios BCV:
+   - Debajo de los precios de productos en el inicio y el catálogo.
+   - En el detalle del producto.
+   - Debajo del subtotal del carrito y del formulario de compra.
+   Se muestra cuando la moneda configurada es USD. El aviso informa que los pagos en bolívares se coordinan a tasa BCV vigente del día.
+   IMPORTANTE: este cambio es informativo; no crea una cotización en vivo ni modifica el cálculo de precios o el mensaje de WhatsApp.
+
+3. Galería de fotografías:
+   - Las tarjetas de productos recorren las fotos de todos los colores.
+   - Al elegir un color, la tarjeta selecciona la primera foto de ese color.
+   - Al abrir el producto, todas las fotografías generales y las fotografías de todos los colores permanecen en la galería.
+   - Al tocar una miniatura de otro color, también se selecciona ese color.
+
+4. Fotografías sin recorte:
+   - Las tarjetas y la galería de detalle muestran las imágenes completas con object-fit: contain.
+   - Se recomienda preparar las imágenes nuevas en 1200 × 1500 px (4:5), WEBP.
+   - Ver GUIA_FOTOGRAFIAS_PRODUCTOS_ATLE.txt.
+
+5. Botón «Ver catálogo completo»:
+   - Mayor contraste y presencia.
+   - Movimiento sutil de la flecha, respetando la preferencia de reducir movimiento del dispositivo.
+
+6. ATLE Studio:
+   - Se elimina el campo para subir/cambiar la fotografía principal de portada.
+   - Se mantienen editables los textos y las dos fotografías de «Nuestra esencia».
+   - Se añade una explicación para evitar confundir quitar una imagen de la ficha con borrar el archivo de Storage.
+
+ARCHIVOS MODIFICADOS
+- index.html
+- catalogo.html
+- admin.html
+- admin.js
+- atle-theme.css
+
+ARCHIVOS NUEVOS
+- imagenes/ATLE_portada_desktop.webp
+- imagenes/ATLE_portada_mobile.webp
+- GUIA_FOTOGRAFIAS_PRODUCTOS_ATLE.txt
+
+DATOS Y SERVICIOS QUE NO SE MODIFICARON
+- No se ejecutó ni se añadió SQL.
+- No se cambió configuracion.js ni las credenciales públicas de conexión.
+- No se modificaron atle-data.js, atle-inventory.js, el inventario, las ventas, las políticas RLS ni las tablas de Supabase.
+- No se eliminaron productos, fotografías, ajustes ni registros.
+- Se conserva .github/workflows/mantener-supabase-activo.yml y vercel.json.
+- El campo antiguo hero_imagen puede seguir existiendo en atle_settings, pero el sitio ya no lo consulta para la portada. No hace falta borrarlo.
+
+RESPALDO ANTES DE PUBLICAR
+1. Descarga el ZIP actual de GitHub y consérvalo.
+2. En ATLE Studio > Cuenta y respaldo, descarga el JSON.
+3. En Supabase > Storage > atle-fotos, respalda también las imágenes originales. El JSON guarda referencias, no los archivos de imagen.
+
+CÓMO PUBLICAR
+1. Descomprime este ZIP.
+2. Entra en la carpeta atleoficialve-main.
+3. Sube/reemplaza su contenido en la raíz del repositorio GitHub, rama main.
+4. Conserva la carpeta .github/workflows y el archivo mantener-supabase-activo.yml que ya tienes en el repositorio. Esta entrega también los incluye.
+5. Espera a que Vercel termine el despliegue.
+6. Abre la tienda y prueba en escritorio y móvil: inicio, catálogo, carrusel de tarjetas, selección de color, detalle, carrito, subtotal, formulario y ATLE Studio.
+
+NO EJECUTES SQL
+Esta actualización es únicamente de archivos del sitio. No debes volver a ejecutar INSTALAR_SUPABASE.sql ni ninguna migración para instalar estos cambios.
+
+CÓMO LIBERAR ESPACIO EN STORAGE
+- Al pulsar × en una miniatura de ATLE Studio solo se quita la referencia de esa ficha; no se borra el archivo original.
+- Primero quita la referencia y guarda el producto.
+- Comprueba que el archivo no esté asociado a otro producto, color, portada de historia o referencia privada.
+- Luego entra a Supabase > Storage > atle-fotos > productos y elimina únicamente el archivo que confirmaste que no se usa.
+- No borres el bucket atle-fotos ni carpetas completas.
+- Si tienes dudas sobre una foto, consérvala. Es preferible ocupar algo más de espacio que romper una galería publicada.
+
+ATLE · Hecha para tu ritmo

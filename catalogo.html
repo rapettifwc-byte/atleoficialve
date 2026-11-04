@@ -30,7 +30,7 @@
     .more-products-wrap{padding:39px 0 0;text-align:center;display:grid;justify-items:center;gap:12px}.more-products-wrap p{font-size:12px;color:#798174;margin:0}.more-products-btn{padding-inline:31px;min-height:50px;border-radius:3px}.catalog-intro{background:#E8E7DB;padding:62px 0 46px;text-align:center}.catalog-intro h1{font:400 clamp(39px,5vw,67px) Georgia,serif;letter-spacing:-.04em;color:var(--olive-dark);margin:0 0 16px}.catalog-intro p{max-width:540px;margin:0 auto;color:#5D6956;font-size:14px;line-height:1.8}.catalog-intro .small-label{margin-bottom:17px}.catalog-page .products-section{padding-top:56px}.tools[hidden]{display:none!important}#load-more-products[hidden]{display:none!important}.catalog-page .tools{display:flex!important}.field[hidden]{display:none!important}.checkout-conditional-note{font-size:11px;color:#718168;margin:-4px 0 0;line-height:1.5}.checkout-summary{font-size:13px}.checkout-summary strong{white-space:nowrap}
     @media(max-width:600px){.catalog-intro{padding:44px 0 29px}.more-products-wrap{padding-top:25px}}
   </style>
-<link rel="stylesheet" href="/atle-theme.css?v=15.2">
+<link rel="stylesheet" href="/atle-theme.css?v=16.0">
 
 <!-- ATLE v15.3 · Pie editorial optimizado; no modifica las funciones de tienda. -->
 <style id="atle-footer-layout-v15-3">
@@ -166,6 +166,7 @@
     <div class="panel-head"><h2 id="cart-title">Tu carrito <span id="cart-title-count"></span></h2><button class="panel-close" type="button" id="close-cart" aria-label="Cerrar carrito">×</button></div>
     <div class="cart-body" id="cart-items"></div>
     <div class="cart-foot"><div class="subtotal"><span>Subtotal sin envío</span><strong id="cart-total">$0.00</strong></div>
+      <p class="bcv-note" id="cart-bcv-note" data-bcv-note>Para pagos en Bs., se aplica la tasa BCV vigente del día.</p>
       <button type="button" class="btn full" id="checkout-button">Continuar al pedido →</button>
       <p class="muted" id="cart-small-note">Los pedidos se confirman por WhatsApp. No incluye envío ni realiza cobros.</p>
     </div>
@@ -186,6 +187,7 @@
       <form id="checkout-form">
         <div class="checkout-grid" id="checkout-fields"></div>
         <div class="checkout-summary"><span>Subtotal (sin envío)</span><strong id="checkout-total">$0.00</strong></div>
+        <p class="bcv-note checkout-bcv-note" id="checkout-bcv-note" data-bcv-note>Para pagos en Bs., se aplica la tasa BCV vigente del día.</p>
         <button type="submit" class="btn full wa-cta" id="send-whatsapp">
           <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21l2-5a9 9 0 1 1 4 4z"/><path d="M9 8c0 4 3 7 7 7"/></svg>
           <span id="checkout-submit-text">Preparar pedido en WhatsApp ↗</span>
@@ -208,9 +210,28 @@ let PRODUCTOS = [];
 let FORMULARIO = window.ATLE_FORM.normalize();
 const IS_CATALOG=document.body.classList.contains('catalog-page');
 const fallbackImage='imagenes/legging_oliva.webp';
-function colorRecord(p,label){return p.colores.find(c=>c.nombre===label)||p.colores[0]||{};}
-function photoFor(p,label){const c=colorRecord(p,label);return c.imagen || (c.imagenes||[])[0] || p.imagen || (p.imagenes||[])[0] || fallbackImage;}
-function photosFor(p,label){const c=colorRecord(p,label);return [...new Set([c.imagen,...(c.imagenes||[]),p.imagen,...(p.imagenes||[])].filter(Boolean))];}
+function colorRecord(p,label){return (p.colores||[]).find(c=>c.nombre===label)||(p.colores||[])[0]||{};}
+function allProductPhotos(p){
+ const photos=[],seen=new Set();
+ const add=(url,color='',label='')=>{const value=String(url||'').trim();if(!value||seen.has(value))return;seen.add(value);photos.push({url:value,color:color||'',label:label||''});};
+ (p.colores||[]).forEach(c=>{add(c.imagen,c.nombre,'Foto principal · '+c.nombre);(c.imagenes||[]).forEach((url,i)=>add(url,c.nombre,'Foto '+(i+2)+' · '+c.nombre));});
+ add(p.imagen,'','Fotografía general');
+ (p.imagenes||[]).forEach((url,i)=>add(url,'','Fotografía general '+(i+1)));
+ return photos.length?photos:[{url:fallbackImage,color:'',label:'Imagen de referencia'}];
+}
+function photoFor(p,label){const all=allProductPhotos(p);return (all.find(x=>x.color===label)||all.find(x=>!x.color)||all[0]).url;}
+function photosFor(p,label){const all=allProductPhotos(p);return [...all.filter(x=>x.color===label),...all.filter(x=>!x.color),...all.filter(x=>x.color&&x.color!==label)];}
+function bcvNoteHtml(){return CONFIG.moneda==='USD'?'<p class="bcv-note">Para pagos en Bs., se aplica la tasa BCV vigente del día.</p>':'';}
+function setCardGalleryIndex(card,index,syncColor=false){
+ const p=productById(card.dataset.productId);if(!p)return;
+ const photos=allProductPhotos(p);const next=(index%photos.length+photos.length)%photos.length;const photo=photos[next];
+ card.dataset.currentIndex=String(next);
+ const img=card.querySelector('.product-photo-main img');if(img){img.src=photo.url;img.alt=photo.color?`${p.nombre} · ${photo.color}`:p.nombre;}
+ const count=card.querySelector('.product-photo-count');if(count)count.textContent=`${next+1} / ${photos.length}`;
+ const main=card.querySelector('.product-photo-main');if(main)main.setAttribute('aria-label',`Ver ${p.nombre}, fotografía ${next+1} de ${photos.length}${photo.color?', color '+photo.color:''}`);
+ if(syncColor&&photo.color){const select=card.querySelector('.card-color');if(select&&select.value!==photo.color){select.value=photo.color;card.querySelector('.card-size').innerHTML=sizesFor(p,photo.color).map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');}}
+}
+function setCardGalleryForColor(card,p,color){const photos=allProductPhotos(p);let index=photos.findIndex(x=>x.color===color);if(index<0)index=photos.findIndex(x=>!x.color);setCardGalleryIndex(card,index<0?0:index,false);}
 function sizesFor(p,label){const c=colorRecord(p,label);return (c.tallas&&c.tallas.length)?c.tallas:p.tallas;}
 function renderCheckoutFields(){
  $('#checkout-title').textContent=FORMULARIO.titulo;
@@ -260,6 +281,7 @@ function updateConditionalCheckout(){
 function setTextSettings(){
  document.querySelectorAll('[data-config-text]').forEach(el=>{let v=CONFIG[el.dataset.configText];if(typeof v==='string')el.textContent=v;});
  document.querySelectorAll('[data-config-image]').forEach(el=>{let v=CONFIG[el.dataset.configImage];if(v)el.src=v;});
+ $$('[data-bcv-note]').forEach(el=>{el.hidden=CONFIG.moneda!=='USD';});
  $('#announcement-text').textContent=CONFIG.anuncio||'ATLE · HECHA PARA TU RITMO';
  $('#instagram-link').href='https://www.instagram.com/'+CONFIG.instagram.replace(/^@/,'')+'/';
  $('#instagram-label').textContent='Instagram '+CONFIG.instagram+' ↗';
@@ -308,32 +330,40 @@ function renderProducts(){
   const featured=matched.filter(p=>p.destacado===true);
   const products=IS_CATALOG?matched.slice(0,visibleCount):(featured.length?featured:matched).slice(0,6);
   if(IS_CATALOG){const btn=$('#load-more-products');if(btn){btn.hidden=matched.length<=visibleCount;btn.textContent=`Mostrar más productos (${products.length} de ${matched.length}) ↓`;}}
-  grid.innerHTML = products.length ? products.map(p=>`
+  grid.innerHTML = products.length ? products.map(p=>{
+    const photos=allProductPhotos(p),initialColor=p.colores?.[0]?.nombre;
+    let initialIndex=photos.findIndex(x=>x.color===initialColor);if(initialIndex<0)initialIndex=photos.findIndex(x=>!x.color);if(initialIndex<0)initialIndex=0;
+    return `
     <article class="product-card" data-product-id="${escapeHtml(p.id)}">
-      <button type="button" class="product-photo" data-view="${escapeHtml(p.id)}" aria-label="Ver ${escapeHtml(p.nombre)}">
-        <img src="${escapeHtml(photoFor(p,p.colores[0]?.nombre))}" alt="${escapeHtml(p.nombre)}" loading="lazy" decoding="async">
+      <div class="product-photo" data-card-gallery data-current-index="${initialIndex}" role="group" aria-label="Galería de ${escapeHtml(p.nombre)}">
+        <button type="button" class="product-photo-main" data-view="${escapeHtml(p.id)}" aria-label="Ver ${escapeHtml(p.nombre)}">
+          <img src="${escapeHtml(photos[initialIndex].url)}" alt="${escapeHtml(p.nombre)}" loading="lazy" decoding="async">
+          <span class="quick-view">Ver detalles +</span>
+        </button>
+        ${photos.length>1?`<button type="button" class="product-photo-arrow is-prev" data-card-step="-1" aria-label="Fotografía anterior">‹</button><button type="button" class="product-photo-arrow is-next" data-card-step="1" aria-label="Siguiente fotografía">›</button><span class="product-photo-count" aria-live="polite">${initialIndex+1} / ${photos.length}</span>`:''}
         ${p.etiqueta?`<span class="tag">${escapeHtml(p.etiqueta)}</span>`:''}
-        <span class="quick-view">Ver detalles +</span>
-      </button>
+      </div>
       <div class="card-info">
         <span class="category">${escapeHtml(p.categoria)}</span>
         <h3 class="product-name">${escapeHtml(p.nombre)}</h3>
         <p class="product-desc">${escapeHtml(p.descripcion)}</p>
         <div class="price-row"><strong class="price">${money(p.precio)}</strong><span class="currency-tag">${escapeHtml(CONFIG.moneda)}</span></div>
+        ${bcvNoteHtml()}
         <div class="variant-row">
-          <label>Color<select class="card-color" aria-label="Color de ${escapeHtml(p.nombre)}">${p.colores.map(c=>`<option value="${escapeHtml(c.nombre)}">${escapeHtml(c.nombre)}</option>`).join('')}</select></label>
-          <label>Talla<select class="card-size" aria-label="Talla de ${escapeHtml(p.nombre)}">${sizesFor(p,p.colores[0]?.nombre).map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('')}</select></label>
+          <label>Color<select class="card-color" aria-label="Color de ${escapeHtml(p.nombre)}">${(p.colores||[]).map(c=>`<option value="${escapeHtml(c.nombre)}">${escapeHtml(c.nombre)}</option>`).join('')}</select></label>
+          <label>Talla<select class="card-size" aria-label="Talla de ${escapeHtml(p.nombre)}">${sizesFor(p,initialColor).map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('')}</select></label>
         </div>
         <button type="button" class="product-add" data-add="${escapeHtml(p.id)}">${iconBag} Agregar al carrito</button>
       </div>
-    </article>`).join('') : '<div class="empty-search">No encontramos productos con ese filtro. Prueba otra opción.</div>';
+    </article>`;
+  }).join('') : '<div class="empty-search">No encontramos productos con ese filtro. Prueba otra opción.</div>';
 }
 $('#filter-options').addEventListener('click',e=>{let btn=e.target.closest('[data-filter]');if(!btn)return;filter=btn.dataset.filter;visibleCount=12;$$('[data-filter]').forEach(b=>b.classList.toggle('active',b===btn));renderProducts();});
 grid.addEventListener('change',e=>{
  const el=e.target;
  if(!el.matches('.card-color'))return;
  const card=el.closest('.product-card'),p=productById(card.dataset.productId);if(!p)return;
- card.querySelector('.product-photo img').src=photoFor(p,el.value);
+ setCardGalleryForColor(card,p,el.value);
  card.querySelector('.card-size').innerHTML=sizesFor(p,el.value).map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
 });
 $('#product-search').addEventListener('input',e=>{searchText=e.target.value.trim().toLocaleLowerCase('es');visibleCount=12;renderProducts();});
@@ -349,20 +379,34 @@ function addToCart(id,color,talla,cantidad=1){
   saveCart();toast(`${p.nombre} añadido al carrito`);
 }
 grid.addEventListener('click',event=>{
+  const step=event.target.closest('[data-card-step]');
+  if(step){const card=step.closest('.product-card');if(card){const current=Number(card.dataset.currentIndex||0);setCardGalleryIndex(card,current+Number(step.dataset.cardStep),true);}return;}
   const add=event.target.closest('[data-add]');
   if(add){const card=add.closest('.product-card');addToCart(add.dataset.add,$('.card-color',card).value,$('.card-size',card).value);return;}
   const view=event.target.closest('[data-view]');
   if(view)showProduct(view.dataset.view);
 });
+// Deslizamiento horizontal en las galerías de las tarjetas, especialmente cómodo en móvil.
+grid.addEventListener('touchstart',event=>{
+ const gallery=event.target.closest('.product-photo-main');if(!gallery)return;
+ const card=gallery.closest('.product-card');if(card)card.dataset.touchStartX=String(event.changedTouches[0].clientX);
+},{passive:true});
+grid.addEventListener('touchend',event=>{
+ const gallery=event.target.closest('.product-photo-main');if(!gallery)return;
+ const card=gallery.closest('.product-card');if(!card||card.dataset.touchStartX===undefined)return;
+ const delta=event.changedTouches[0].clientX-Number(card.dataset.touchStartX);delete card.dataset.touchStartX;
+ if(Math.abs(delta)>42){const current=Number(card.dataset.currentIndex||0);setCardGalleryIndex(card,current+(delta<0?1:-1),true);}
+},{passive:true});
 function showProduct(id){
   const p=productById(id);if(!p)return;
   const initialColor=p.colores[0]?.nombre;
   const html=`<div class="product-detail">
-    <div class="detail-gallery"><img id="detail-main-img" class="detail-main-img" src="${escapeHtml(photoFor(p,initialColor))}" alt="${escapeHtml(p.nombre)}"><div class="detail-thumbs" id="detail-thumbs"></div></div>
+    <div class="detail-gallery"><img id="detail-main-img" class="detail-main-img" src="${escapeHtml(photoFor(p,initialColor))}" alt="${escapeHtml(p.nombre)}"><div class="detail-thumbs" id="detail-thumbs" aria-label="Todas las fotografías del producto"></div></div>
     <div class="detail-meta">
       <span class="category">${escapeHtml(p.categoria)}</span>
       <h3 class="product-name" id="detail-name">${escapeHtml(p.nombre)}</h3>
       <strong class="price">${money(p.precio)}</strong>
+      ${bcvNoteHtml()}
       <p>${escapeHtml(p.descripcion)}</p>
       <label>Color<select id="detail-color">${p.colores.map(c=>`<option value="${escapeHtml(c.nombre)}">${escapeHtml(c.nombre)}</option>`).join('')}</select></label>
       <label>Talla<select id="detail-size">${sizesFor(p,initialColor).map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('')}</select></label>
@@ -371,12 +415,20 @@ function showProduct(id){
     </div></div>`;
   $('#product-detail-content').innerHTML=html;
   function gallery(){
-    const pics=photosFor(p,$('#detail-color').value);
-    $('#detail-main-img').src=pics[0]||fallbackImage;
-    $('#detail-thumbs').innerHTML=pics.map((pic,idx)=>`<button type="button" data-photo="${escapeHtml(pic)}" class="${idx===0?'is-active':''}" aria-label="Ver fotografía ${idx+1}"><img src="${escapeHtml(pic)}" alt=""></button>`).join('');
+    const pics=allProductPhotos(p),selectedColor=$('#detail-color').value,selectedPhoto=photoFor(p,selectedColor);
+    const activeIndex=Math.max(0,pics.findIndex(x=>x.url===selectedPhoto));
+    $('#detail-main-img').src=pics[activeIndex].url;
+    $('#detail-main-img').alt=pics[activeIndex].color?`${p.nombre} · ${pics[activeIndex].color}`:p.nombre;
+    $('#detail-thumbs').innerHTML=pics.map((pic,idx)=>`<button type="button" data-photo-index="${idx}" class="${idx===activeIndex?'is-active':''}" title="${escapeHtml(pic.label||pic.color||'Fotografía')}" aria-label="Ver fotografía ${idx+1}${pic.color?', color '+escapeHtml(pic.color):''}"><img src="${escapeHtml(pic.url)}" alt="${escapeHtml(pic.label||p.nombre)}" loading="lazy" decoding="async"></button>`).join('');
   }
   $('#detail-color').onchange=()=>{$('#detail-size').innerHTML=sizesFor(p,$('#detail-color').value).map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');gallery()};
-  $('#detail-thumbs').onclick=e=>{const b=e.target.closest('[data-photo]');if(!b)return;$('#detail-main-img').src=b.dataset.photo;$$('#detail-thumbs button').forEach(x=>x.classList.toggle('is-active',x===b));};
+  $('#detail-thumbs').onclick=e=>{
+    const b=e.target.closest('[data-photo-index]');if(!b)return;
+    const pic=allProductPhotos(p)[Number(b.dataset.photoIndex)];if(!pic)return;
+    $('#detail-main-img').src=pic.url;$('#detail-main-img').alt=pic.color?`${p.nombre} · ${pic.color}`:p.nombre;
+    $$('#detail-thumbs button').forEach(x=>x.classList.toggle('is-active',x===b));
+    if(pic.color&&$('#detail-color').value!==pic.color){$('#detail-color').value=pic.color;$('#detail-size').innerHTML=sizesFor(p,pic.color).map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');}
+  };
   gallery();
   const qtyEl=$('#detail-qty');
   $('#detail-minus').onclick=()=>qtyEl.textContent=Math.max(1,Number(qtyEl.textContent)-1);

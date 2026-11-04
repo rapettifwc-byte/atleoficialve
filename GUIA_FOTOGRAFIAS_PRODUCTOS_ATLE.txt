@@ -1,0 +1,32 @@
+ATLE · GUÍA DE FOTOGRAFÍAS PARA PRODUCTOS
+========================================
+
+TAMAÑO RECOMENDADO
+- 1200 × 1500 píxeles.
+- Proporción vertical 4:5.
+- Formato preferido: WEBP.
+- Peso recomendado: 200–600 KB por foto, procurando no superar 1 MB.
+- El panel admite JPG, PNG y WEBP de hasta 6 MB por imagen.
+
+ENCUADRE
+- Coloca la prenda completa dentro del encuadre.
+- Deja aproximadamente 8–12 % de margen alrededor; no pegues la prenda a los bordes.
+- Centra la prenda y evita que mangas, tirantes, cintura o ruedos queden cortados.
+- Usa fondo blanco, gris muy claro o un fondo uniforme y limpio.
+- Mantén iluminación, distancia, perspectiva y fondo similares entre fotos del mismo modelo.
+- No agregues textos, marcas de agua, marcos ni filtros que alteren el color real.
+
+ORDEN SUGERIDO PARA CADA COLOR
+1. Fotografía principal: vista frontal completa.
+2. Vista posterior.
+3. Vista lateral o en uso.
+4. Detalle de tela, costuras, cintura, tirantes o acabados.
+
+CÓMO FUNCIONARÁ EN ATLE
+- En las tarjetas del catálogo se podrá recorrer una sola galería que reúne las fotos generales y las fotos de todos los colores.
+- Al elegir un color, la fotografía principal saltará a la primera imagen de ese color.
+- Al abrir el producto, se conservarán visibles las miniaturas de todas las fotos de todos los colores.
+- La galería no recorta la fotografía: usa object-fit: contain. Las imágenes 4:5 llenan mejor el espacio y mantienen la prenda completa.
+
+CONSEJO
+Prepara una plantilla 1200 × 1500 px y exporta todas las fotos con el mismo encuadre. Si la prenda se fotografía en modelo de cuerpo completo y necesita más espacio vertical, conserva todo el cuerpo dentro del lienzo; el sitio la ajustará sin recortarla.
