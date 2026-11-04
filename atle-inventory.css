@@ -22,3 +22,14 @@
 @media(max-width:540px){.inv-line-fields{grid-template-columns:1fr 1fr}.inv-line-fields label:first-child{grid-column:1/-1}.inv-variant-add{grid-template-columns:1fr 1fr}.inv-variant-add label:first-child{grid-column:1/-1}.inv-variant-add button{grid-column:1/-1}.inv-stock-grid{grid-template-columns:1fr}.inv-sale-summary{align-items:flex-start;flex-direction:column}.inv-line-fields input,.inv-line-fields select,.inv-variant-add input{font-size:16px}}
 
 .inv-photo-empty{width:80px;min-width:70px;min-height:74px;display:flex;align-items:center;justify-content:center;background:#f0f1ec;color:#7b8377;border:1px dashed #ced2c8;border-radius:6px;text-align:center;font-size:11px;padding:7px}
+
+
+/* ATLE V20 · Campos táctiles sin zoom automático en iPhone. */
+@media(max-width:767px){
+ html,body{width:100%;max-width:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+ body{overflow-x:hidden}
+ button,a,input,select,textarea{touch-action:manipulation}
+ input:not([type="checkbox"]):not([type="radio"]):not([type="color"]),select,textarea{font-size:16px!important;max-width:100%}
+ .inv-app,.inv-main,.inv-content,.inv-panel,.inv-card{min-width:0;max-width:100%}
+ .inv-content{overflow-x:hidden}
+}

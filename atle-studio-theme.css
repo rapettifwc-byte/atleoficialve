@@ -61,3 +61,21 @@ dialog{background:#fff}dialog::backdrop{background:#000000A8}
 .avatar{background:#F0F0F0;color:#222}
 .sidebar-brand span{color:#E4E4E4}
 .auth-art:after{color:#fff}
+
+
+/* ATLE V20 · Previene el zoom automático de iOS al enfocar campos y evita desbordes móviles. */
+@media(max-width:767px){
+  html,body{width:100%;max-width:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{overflow-x:hidden}
+  button,a,input,select,textarea{touch-action:manipulation}
+  input:not([type="checkbox"]):not([type="radio"]):not([type="color"]),
+  select,textarea,.form-control{
+    font-size:16px!important;
+    max-width:100%;
+  }
+  input,select,textarea,button{max-width:100%;box-sizing:border-box}
+  .admin-app,.admin-body,.content,.panel,.panel-body,.field,.two-col{min-width:0;max-width:100%}
+  .content{overflow-x:hidden}
+  .form-control{min-width:0}
+  .product-table-wrap,.table-wrap{max-width:100%;overflow-x:auto}
+}

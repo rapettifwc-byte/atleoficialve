@@ -1,7 +1,7 @@
 'use strict';
 /* ATLE · Validación pública de existencias antes de añadir/confirmar el carrito.
    Reutiliza la clave privada que ya utiliza api/atle-inventario.js.
-   Solo devuelve el resultado de la validación; nunca expone costos, ventas, SKU ni claves. */
+   Devuelve solo la validación y el SKU comercial de los productos solicitados; nunca expone costos, ventas ni claves. */
 
 const NO_STORE = {
   'Cache-Control': 'private, no-store, no-cache, max-age=0',
@@ -103,7 +103,7 @@ async function validateItems(env, items) {
   const filter = inFilter(ids);
   const [productRows, inventoryRows, stockGroups] = await Promise.all([
     supabaseRows(env, 'atle_products', { select: 'id,data', id: filter }),
-    supabaseRows(env, 'atle_inventory_products', { select: 'product_id,stock_enabled', product_id: filter }),
+    supabaseRows(env, 'atle_inventory_products', { select: 'product_id,stock_enabled,sku', product_id: filter }),
     // Consultar por producto evita alcanzar el límite de filas REST cuando hay muchos colores/tallas.
     Promise.all(ids.map(id => supabaseRows(env, 'atle_inventory_stock', { select: 'product_id,color,size,quantity', product_id: 'eq.' + id })))
   ]);
@@ -111,6 +111,11 @@ async function validateItems(env, items) {
 
   const products = new Map(productRows.map(row => [String(row.id), row.data || {}]));
   const inventory = new Map(inventoryRows.map(row => [String(row.product_id), row]));
+  // Se comparte únicamente el SKU comercial solicitado para el mensaje de WhatsApp.
+  // Nunca se devuelven costos, márgenes, datos de ventas ni claves privadas.
+  const skus = Object.fromEntries([...inventory.entries()]
+    .map(([id, row]) => [id, String(row.sku || '').trim()])
+    .filter(([, sku]) => !!sku));
   const errors = [];
 
   for (const item of items) {
@@ -124,6 +129,8 @@ async function validateItems(env, items) {
       message = 'Este producto ya no está disponible.';
     } else if (!inv || inv.stock_enabled !== true) {
       message = 'El inventario de este producto todavía no está configurado. Escríbenos por WhatsApp para confirmar disponibilidad.';
+    } else if (!String(inv.sku || '').trim()) {
+      message = 'Este producto no tiene un SKU registrado en ATLE Studio. Configura su SKU antes de aceptar pedidos.';
     } else {
       const sizes = variantSizes(product, item.color);
       if (!sizes || !sizes.includes(item.size)) {
@@ -151,8 +158,8 @@ async function validateItems(env, items) {
     });
   }
 
-  if (errors.length) return { ok: false, checked: items.length, errors, message: errors[0].message };
-  return { ok: true, checked: items.length };
+  if (errors.length) return { ok: false, checked: items.length, errors, skus, message: errors[0].message };
+  return { ok: true, checked: items.length, skus };
 }
 
 async function main(req, res) {

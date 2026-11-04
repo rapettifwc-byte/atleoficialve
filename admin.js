@@ -129,7 +129,11 @@ async function uploadMultiple(files,onDone,status){
  catch(err){if(status)status.textContent=err.message;toast(err.message,true)}
 }
 function fillHome(){
- $$('[data-skey]', $('#homepage-form')).forEach(el=>{const value=state.settings[el.dataset.skey];if(el.type==='checkbox')el.checked=!!value;else el.value=value??'';});
+ $$('[data-skey]', $('#homepage-form')).forEach(el=>{
+  let value=state.settings[el.dataset.skey];
+  if(el.dataset.skey==='hero_boton'&&(!String(value||'').trim()||String(value).trim().toLocaleLowerCase('es')==='descubrir colección'))value='Descubrir destacados';
+  if(el.type==='checkbox')el.checked=!!value;else el.value=value??'';
+ });
  $$('[data-preview-key]').forEach(img=>{img.src=photoURL(state.settings[img.dataset.previewKey])});
 }
 function fillOrders(){
