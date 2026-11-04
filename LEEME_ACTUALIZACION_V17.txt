@@ -1,0 +1,42 @@
+ATLE · ACTUALIZACIÓN V17 · INVENTARIO, CATÁLOGO Y ETIQUETAS
+=========================================================
+
+CAMBIOS
+- El catálogo completo ya no permite agregar directamente desde la tarjeta: el cliente debe abrir «Ver detalles y opciones» para elegir color, talla y cantidad.
+- En el inicio, los productos marcados como Destacados conservan la selección de color/talla y el agregado rápido.
+- Las cantidades se validan contra atle_inventory_stock por producto + color + talla antes de agregar, aumentar cantidades, abrir el checkout y enviar el pedido a WhatsApp.
+- Se añadió /api/atle-stock.js. Reutiliza ATLE_SUPABASE_URL y ATLE_SUPABASE_SECRET_KEY que ya usa /api/atle-inventario.js. No necesita una nueva tabla ni SQL.
+- Si el inventario de un producto no está configurado o la consulta no funciona, el sistema no agrega unidades (fallo seguro) y muestra un mensaje para contactar ATLE.
+- Se mantiene el stock manual: añadir al carrito no reserva ni descuenta unidades. El inventario solo se descuenta cuando la administradora registra/confirmar la venta desde ATLE Studio.
+- Precio de las tarjetas y del detalle: «$XX.XX – (Tasa BCV)» para moneda USD.
+- ATLE Studio permite hasta 3 etiquetas personalizadas separadas por comas, con emojis (por ejemplo: ✨ NUEVO, 🔥 OFERTA, ⚡ POCAS UNIDADES). Se conserva el campo existente `etiqueta`; no se requiere migración.
+- Catálogo móvil más compacto: intro y filtros reducidos, categorías en desplazamiento horizontal y productos en dos columnas para que la primera prenda aparezca antes.
+
+INSTALACIÓN
+1. Conserva una copia de tu versión actual.
+2. Descomprime este ZIP.
+3. Sube el contenido de atleoficialve-main a la raíz del repositorio GitHub, reemplazando los archivos existentes.
+4. IMPORTANTE: conserva la carpeta .github/workflows y su workflow de mantener Supabase activo.
+5. Haz Commit changes y espera el despliegue de Vercel.
+6. No ejecutes SQL. No reinstales Supabase. No elimines Storage.
+
+CONFIGURACIÓN DE VERCEL
+- La nueva API reutiliza ATLE_SUPABASE_URL y ATLE_SUPABASE_SECRET_KEY, las mismas variables privadas que requiere /api/atle-inventario.js.
+- Si el endpoint responde «No se puede verificar el inventario», revisa que esas dos variables existan en Vercel (Production y Preview si corresponde) y vuelve a desplegar.
+- No publiques sb_secret ni service_role en configuracion.js ni en GitHub.
+
+PRUEBAS RECOMENDADAS
+1. En ATLE Studio, elige un producto ya vinculado a Inventario y comprueba cantidades por color/talla.
+2. En /catalogo, confirma que las tarjetas solo muestran «Ver detalles y opciones».
+3. Abre el producto, selecciona color y talla, e intenta agregar una cantidad mayor a la existencia: debe rechazarla.
+4. En el inicio, comprueba que solo los productos marcados Destacados permiten selección rápida en la tarjeta.
+5. Comprueba aumento de cantidad desde el carrito y validación al continuar a checkout.
+6. Prueba enviar el pedido a WhatsApp; debe validar nuevamente el stock antes de abrir WhatsApp.
+7. En ATLE Studio > Productos, prueba etiquetas como «✨ NUEVO, 🔥 OFERTA» y guarda.
+8. En teléfono, abre /catalogo y verifica que ya se vea el inicio de la primera tarjeta sin tener que desplazarte mucho.
+
+NOTA SOBRE INVENTARIO
+La validación comprueba existencias actuales, pero el carrito no reserva stock. Como los pedidos se terminan de coordinar por WhatsApp, una venta confirmada por otro canal puede cambiar las existencias después de una validación. La administradora debe confirmar el stock al cerrar el pedido y registrar la venta en ATLE Studio.
+
+DATOS
+No se modifica ni elimina atle_products, atle_settings, atle_inventory_products, atle_inventory_stock, ventas ni Storage. No hay scripts SQL destructivos ni migraciones.

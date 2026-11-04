@@ -61,7 +61,14 @@ function renderProductList(){
 }
 async function reloadProducts(){const data=await api('/api/admin/products');state.products=data.products;renderProductList();renderDashboard()}
 function photoURL(path){return window.ATLE_DB.photoURL(path)}
-function editorDefaults(){return {id:null,nombre:'',categoria:'Leggings',precio:0,imagen:'',imagenes:[],descripcion:'',colores:[{nombre:'Negro',hex:'#292929',imagen:'',imagenes:[],tallas:[]}],tallas:['S','M','L'],etiqueta:'',activo:false,destacado:false}}
+function editorDefaults(){return {id:null,nombre:'',categoria:'Leggings',precio:0,imagen:'',imagenes:[],descripcion:'',colores:[{nombre:'Negro',hex:'#292929',imagen:'',imagenes:[],tallas:[]}],tallas:['S','M','L'],etiqueta:'',etiquetas:[],activo:false,destacado:false}}
+function editorTagValues(product){
+ const source=Array.isArray(product?.etiquetas)&&product.etiquetas.length?product.etiquetas:String(product?.etiqueta||'').split(',');
+ return [...new Set(source.map(x=>String(x||'').trim()).filter(Boolean))].slice(0,8);
+}
+function parseProductTags(value){
+ return [...new Set(String(value||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean))].slice(0,8).map(x=>x.slice(0,50));
+}
 function openEditor(p){
  state.editing=structuredClone(p||editorDefaults());
  $('#editor-title').textContent=p?'Editar producto':'Crear nuevo producto';
@@ -76,7 +83,7 @@ function openEditor(p){
  $('#product-name').value=state.editing.nombre;
  $('#product-category').value=state.editing.categoria;
  $('#product-price').value=state.editing.precio;
- $('#product-tag').value=state.editing.etiqueta;
+ $('#product-tags').value=editorTagValues(state.editing).join('\n');
  $('#product-description').value=state.editing.descripcion;
  $('#product-sizes').value=state.editing.tallas.join(', ');
  $('#product-active').checked=state.editing.activo!==false;$('#product-featured').checked=state.editing.destacado===true;
@@ -104,7 +111,7 @@ function collectEditor(){
  const p=state.editing;
  p.nombre=$('#product-name').value.trim();p.categoria=$('#product-category').value.trim();
  p.precio=Number($('#product-price').value);p.descripcion=$('#product-description').value.trim();
- p.etiqueta=$('#product-tag').value.trim();p.tallas=parseCSV($('#product-sizes').value);
+ p.etiquetas=parseProductTags($('#product-tags').value);p.etiqueta=p.etiquetas.join(', ');p.tallas=parseCSV($('#product-sizes').value);
  p.activo=$('#product-active').checked;p.destacado=$('#product-featured').checked;
  return p;
 }
@@ -278,6 +285,7 @@ $('#product-gallery-file').addEventListener('change',async e=>{const files=[...e
 $('#product-form').addEventListener('submit',async e=>{
  e.preventDefault();const b=$('#save-product');if(b.disabled)return;
  const p=collectEditor();
+ if((p.etiquetas||[]).length>8)return toast('Puedes colocar un máximo de 8 etiquetas por producto, una por línea.',true);
  const inv=window.ATLE_INVENTORY;
  const original=state.products.find(x=>x.id===p.id);
  const linked=!!inv?.getInfo(p.id)?.stock_enabled;

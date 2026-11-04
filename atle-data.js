@@ -93,7 +93,9 @@
   const name=String(p.nombre||'').trim();if(!name||name.length>90)throw Error('Escribe un nombre válido (máximo 90 caracteres).');
   const price=Number(p.precio);if(!Number.isFinite(price)||price<0||price>999999)throw Error('Precio inválido.');
   if(!Array.isArray(p.tallas)||!p.tallas.length||!Array.isArray(p.colores)||!p.colores.length)throw Error('Agrega al menos una talla y un color.');
-  return {...p,nombre:name,precio:price,activo:p.activo!==false};
+  const rawTags=Array.isArray(p.etiquetas)&&p.etiquetas.length?p.etiquetas:String(p.etiqueta||'').split(',');
+  const etiquetas=[...new Set(rawTags.map(x=>String(x||'').trim()).filter(Boolean))].slice(0,8).map(x=>x.slice(0,50));
+  return {...p,nombre:name,precio:price,etiquetas,etiqueta:etiquetas.join(', '),activo:p.activo!==false};
  }
  async function upsertProduct(p,id){
   p=normalizeProduct(p);

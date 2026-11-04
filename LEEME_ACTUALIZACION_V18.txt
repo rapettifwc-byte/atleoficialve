@@ -1,0 +1,126 @@
+ATLE · ACTUALIZACIÓN V18
+GITHUB + VERCEL · NOVIEMBRE 2026
+=================================
+
+BASE UTILIZADA
+--------------
+Esta actualización parte de la versión V17 del repositorio atleoficialve que
+se recibió para este trabajo. Se conservaron sus funciones de inventario,
+galerías por color, catálogo móvil, control de carrito, portada y conexión.
+
+CAMBIO PRINCIPAL DE ESTA VERSIÓN
+--------------------------------
+ATLE Studio ahora permite registrar varias etiquetas independientes por
+producto, con texto libre y emojis:
+- Hasta 8 etiquetas por producto.
+- Una etiqueta por línea.
+- Ejemplos:
+  ✨ NUEVO
+  🔥 OFERTA
+  ⚡ POCAS UNIDADES
+  📈 TENDENCIA
+  ❤️ MÁS PEDIDO
+
+Compatibilidad:
+- Los productos antiguos que solo tenían el campo `etiqueta` se siguen leyendo.
+- Si un producto antiguo tenía etiquetas separadas por comas, al editarlo se
+  muestran una por línea.
+- Al guardar, se conserva también el campo de texto antiguo `etiqueta`
+  (unido por comas) para compatibilidad con versiones anteriores.
+- En las tarjetas se muestran hasta 4 etiquetas y, si hay más, aparece +N.
+  En la ficha del producto se muestran todas.
+
+DETALLES CONSERVADOS DE V17
+---------------------------
+1. La validación de existencias consulta el servidor antes de agregar al carrito,
+   aumentar cantidades, abrir el checkout y enviar el pedido a WhatsApp.
+2. El límite se valida por producto + color + talla, no por producto completo.
+3. Ejemplo: 1 Top Negro S y 4 Top Negro M son límites independientes.
+4. El carrito NO reserva ni descuenta inventario. El stock solo cambia cuando
+   la administradora registra una venta manual en ATLE Studio.
+5. En /catalogo, las tarjetas muestran «Ver detalles y opciones»; el cliente
+   selecciona color, talla y cantidad dentro de la ficha.
+6. En el inicio, solo los productos marcados como Destacados permiten compra
+   rápida desde la tarjeta.
+7. El precio se muestra como «$30.00 - (Tasa BCV)» cuando la moneda es USD.
+8. El catálogo móvil utiliza dos columnas, filtros compactos y categorías con
+   desplazamiento horizontal.
+9. La galería del catálogo permite recorrer fotografías de todos los colores.
+10. El envío a WhatsApp conserva una alternativa visible si el navegador bloquea
+    la apertura de una nueva pestaña. La pestaña se solicita antes de esperar la
+    validación de inventario para reducir bloqueos de Safari/Chrome.
+
+ARCHIVOS ACTUALIZADOS
+---------------------
+- admin.html
+- admin.js
+- atle-data.js
+- index.html
+- catalogo.html
+- atle-theme.css
+- vercel.json
+
+ARCHIVOS Y DATOS CONSERVADOS
+----------------------------
+- api/atle-stock.js y api/atle-inventario.js.
+- configuracion.js y la clave pública existente.
+- Productos, identificadores, SKU, títulos, colores y tallas.
+- Fotografías y rutas de Supabase Storage.
+- Tablas de inventario, existencias, tasas, ventas e historial.
+- ATLE Studio, inicio de sesión y flujo de ventas manuales.
+- Carrito, formulario y pedido por WhatsApp.
+- Workflow .github/workflows/mantener-supabase-activo.yml.
+- Logos, imágenes, portada y demás archivos del repositorio.
+
+SUPABASE Y VERCEL
+-----------------
+No se necesita ejecutar SQL ni reinstalar tablas.
+
+La validación pública de existencias usa /api/atle-stock y reutiliza las
+variables privadas que ya utiliza /api/atle-inventario:
+- ATLE_SUPABASE_URL
+- ATLE_SUPABASE_SECRET_KEY
+
+No se agregan nuevas variables de entorno. La clave privada permanece en Vercel
+y no se envía al navegador. El endpoint devuelve el resultado de la validación,
+no entrega SKU, costos, ventas ni notas.
+
+Si la API no puede verificar existencias, bloquea el agregado/checkout para
+evitar una venta sin validación. Revisa que las variables privadas existentes
+sigan configuradas en Vercel para Production y Preview si corresponde.
+
+INSTALACIÓN
+-----------
+1. Conserva una copia del ZIP actual de GitHub.
+2. En ATLE Studio > Cuenta y respaldo, exporta el JSON.
+3. Conserva una copia de las fotografías desde Supabase Storage.
+4. Descomprime este ZIP.
+5. Sube el contenido de atleoficialve-main a la raíz del repositorio GitHub,
+   reemplazando los archivos existentes.
+6. Conserva la carpeta .github/workflows y el workflow de mantener Supabase
+   activo. No fue modificado.
+7. Conserva configuracion.js con la URL y clave PÚBLICA actuales.
+8. Haz Commit changes y espera el despliegue de Vercel.
+9. No ejecutes SQL. No reinstales Supabase. No elimines Storage.
+
+IMPORTANTE SOBRE INVENTARIO
+---------------------------
+- El control exacto aplica a productos con inventario activo (stock_enabled=true)
+  y variantes guardadas en ATLE Studio > Inventario.
+- Los productos que no tengan inventario configurado se pueden visualizar, pero
+  no se pueden agregar al carrito hasta registrar su SKU y existencias.
+- Agregar al carrito, cambiar cantidad o validar el pedido no modifica las tablas
+  de inventario.
+- La tienda vuelve a consultar el stock antes de enviar el pedido.
+- Si el stock cambió por una venta manual, el carrito se ajusta a la existencia
+  actual y se solicita revisarlo.
+- Como se decidió no reservar unidades, dos clientes podrían consultar la última
+  unidad casi al mismo tiempo antes de que la administradora registre una venta.
+  La disponibilidad final se confirma por WhatsApp y con el registro manual.
+
+PRUEBAS
+-------
+Usa el archivo:
+PRUEBAS_ATLE_V18_ANTES_DE_PUBLICAR.txt
+
+FIN

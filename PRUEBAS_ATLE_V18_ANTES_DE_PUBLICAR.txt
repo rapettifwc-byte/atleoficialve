@@ -1,0 +1,189 @@
+ATLE V18 · LISTA DE PRUEBAS ANTES DE PUBLICAR
+================================================
+
+OBJETIVO
+--------
+Verificar que catálogo, compra, inventario y ATLE Studio sigan funcionando antes
+de utilizar esta versión como definitiva.
+
+A. RESPALDOS ANTES DE SUBIR
+---------------------------
+[ ] 1. Descargar el ZIP actual de GitHub y guardarlo como respaldo.
+[ ] 2. En ATLE Studio > Cuenta y respaldo, descargar el respaldo JSON.
+[ ] 3. En Supabase > Storage > atle-fotos, conservar una copia de las imágenes.
+[ ] 4. No ejecutar SQL ni reinstalar tablas para esta actualización.
+[ ] 5. En Vercel, confirmar que siguen configuradas las variables privadas:
+       ATLE_SUPABASE_URL
+       ATLE_SUPABASE_SECRET_KEY
+    No pegues esas claves en GitHub ni en archivos públicos.
+
+B. INSTALACIÓN
+--------------
+[ ] 6. Descomprimir ATLE_ACTUALIZACION_V18_GITHUB_VERCEL.zip.
+[ ] 7. Subir el contenido de atleoficialve-main a la raíz del repositorio.
+[ ] 8. Conservar .github/workflows/mantener-supabase-activo.yml.
+[ ] 9. Conservar configuracion.js con la URL y clave pública actuales.
+[ ] 10. Hacer Commit changes y esperar el despliegue de Vercel.
+[ ] 11. Recargar la web con Ctrl+F5 o abrir una ventana privada.
+
+C. INICIO Y CATÁLOGO
+--------------------
+[ ] 12. Abrir la página de inicio desde computadora.
+[ ] 13. Abrir la página de inicio desde un teléfono.
+[ ] 14. Confirmar que los productos destacados se muestran correctamente.
+[ ] 15. En una tarjeta destacada, seleccionar un color y talla y agregarla.
+[ ] 16. Confirmar que los productos no destacados no ofrecen compra rápida;
+       deben mostrar «Ver detalles y opciones».
+[ ] 17. Abrir /catalogo.
+[ ] 18. Confirmar que ninguna tarjeta del catálogo completo permite agregar
+       directamente al carrito.
+[ ] 19. Pulsar la foto o «Ver detalles y opciones».
+[ ] 20. Confirmar que la ficha muestra las fotografías, colores, tallas,
+       cantidad y botón para agregar al carrito.
+[ ] 21. Confirmar que el carrusel permite ver fotografías de todos los colores.
+[ ] 22. Confirmar que al seleccionar color se actualiza la galería/color
+       seleccionado sin perder el resto de fotografías.
+[ ] 23. Confirmar el formato del precio: «$30.00 - (Tasa BCV)».
+[ ] 24. Confirmar que el texto «(Tasa BCV)» es menor que el precio, pero legible.
+[ ] 25. Confirmar que el botón «Ver catálogo completo» del inicio sigue
+       funcionando y que el resto del diseño no se alteró.
+
+D. ETIQUETAS MÚLTIPLES EN ATLE STUDIO
+------------------------------------
+[ ] 26. Iniciar sesión en ATLE Studio.
+[ ] 27. Abrir un producto de prueba.
+[ ] 28. En «Etiquetas del producto», escribir una por línea:
+       ✨ NUEVO
+       🔥 OFERTA
+       ⚡ POCAS UNIDADES
+       📈 TENDENCIA
+       ❤️ MÁS PEDIDO
+[ ] 29. Guardar el producto.
+[ ] 30. Recargar ATLE Studio y confirmar que las cinco etiquetas permanecen.
+[ ] 31. Abrir la tienda y comprobar que se muestran hasta cuatro etiquetas y
+       un indicador +N si hay más.
+[ ] 32. Abrir los detalles y confirmar que se ven todas las etiquetas.
+[ ] 33. Editar un producto antiguo que tenía una sola etiqueta.
+[ ] 34. Confirmar que la etiqueta antigua aparece en el editor y no se pierde.
+[ ] 35. Guardar ese producto sin cambiar la etiqueta y confirmar que sigue visible.
+[ ] 36. Quitar una etiqueta de prueba, guardar y comprobar que solo esa etiqueta
+       desaparece del producto.
+
+E. CATÁLOGO MÓVIL
+-----------------
+[ ] 37. Abrir /catalogo desde un teléfono.
+[ ] 38. Confirmar que las categorías se desplazan horizontalmente.
+[ ] 39. Confirmar que el buscador se ve y funciona.
+[ ] 40. Confirmar que aparecen dos columnas de productos.
+[ ] 41. Confirmar que la primera fila de prendas aparece pronto, sin tener que
+       desplazarse por un encabezado demasiado alto.
+[ ] 42. Confirmar que el nombre, precio y botón «Ver detalles y opciones» se
+       leen sin desbordarse ni superponerse.
+[ ] 43. Abrir los detalles desde ambas columnas y comprobar que funciona.
+
+F. CONTROL DE EXISTENCIAS POR PRODUCTO + COLOR + TALLA
+------------------------------------------------------
+IMPORTANTE: usar un producto de prueba/no destacado o anotar las existencias
+originales para restaurarlas después.
+
+[ ] 44. En ATLE Studio > Inventario, seleccionar un producto vinculado a SKU.
+[ ] 45. Identificar tres variantes de prueba, por ejemplo:
+       Top Negro S = 1 unidad
+       Top Negro M = 4 unidades
+       Top Rosado S = 2 unidades
+[ ] 46. Agregar 1 Top Negro S. Debe permitirlo.
+[ ] 47. Intentar agregar una segunda unidad de Top Negro S. Debe rechazarla.
+[ ] 48. Agregar 4 Top Negro M. Debe permitirlo aunque Negro S solo tenga 1.
+[ ] 49. Intentar agregar una quinta unidad de Top Negro M. Debe rechazarla.
+[ ] 50. Agregar hasta 2 Top Rosado S. Debe permitirlo de forma independiente.
+[ ] 51. Intentar una tercera unidad de Rosado S. Debe rechazarla.
+[ ] 52. Confirmar que el límite se aplica por producto + color + talla y no
+       limita por error otras tallas o colores.
+[ ] 53. En la ficha del producto, probar el selector de cantidad: no debe
+       permitir una cantidad superior a la disponibilidad.
+[ ] 54. En el carrito, pulsar + hasta el límite. El siguiente aumento debe
+       bloquearse y mostrar un aviso.
+[ ] 55. Confirmar que el botón − y Eliminar siguen funcionando.
+[ ] 56. Agregar al carrito varias variantes del mismo producto, por ejemplo
+       1 Negro S + 1 Negro M. Ambas deben coexistir.
+
+G. CONFIRMAR QUE EL CARRITO NO DESCUENTA EXISTENCIAS
+---------------------------------------------------
+[ ] 57. Anotar el stock de una variante.
+[ ] 58. Agregar esa variante al carrito.
+[ ] 59. Volver a ATLE Studio > Inventario: la cantidad debe seguir igual.
+[ ] 60. Quitar el producto del carrito: el stock debe seguir igual.
+[ ] 61. Registrar una venta manual de prueba solo si es seguro hacerlo.
+[ ] 62. Confirmar que el stock se descuenta únicamente al registrar la venta.
+[ ] 63. Si hiciste una venta de prueba, anúlala con la función normal y verifica
+       que se repongan las existencias. Restaura las cantidades originales.
+
+H. REVALIDACIÓN DEL CARRITO Y CHECKOUT
+-------------------------------------
+[ ] 64. Agregar una variante al carrito.
+[ ] 65. En otra pestaña, registrar una venta manual que reduzca el stock de esa
+       misma combinación.
+[ ] 66. Volver al carrito e intentar aumentar o continuar: debe consultar la
+       existencia actual y no permitir superar el nuevo límite.
+[ ] 67. Si la cantidad guardada supera la existencia nueva, debe ajustarse el
+       carrito y mostrar un aviso para revisarlo.
+[ ] 68. Completar el formulario de compra e intentar enviar el pedido.
+[ ] 69. La tienda debe consultar de nuevo el stock antes de abrir WhatsApp.
+[ ] 70. Si el stock ya no alcanza, no debe enviar el pedido con una cantidad
+       superior a la disponible.
+[ ] 71. Si el stock sigue disponible, WhatsApp debe abrir con el mensaje,
+       productos, colores, tallas, cantidades y subtotal correctos.
+[ ] 72. Confirmar que enviar el formulario NO registra una venta automática.
+
+I. ATLE STUDIO Y DATOS EXISTENTES
+---------------------------------
+[ ] 73. Confirmar que ATLE Studio inicia sesión correctamente.
+[ ] 74. Confirmar que todos los productos, nombres, SKU, precios, colores y
+       tallas siguen allí.
+[ ] 75. Confirmar que las fotografías principales y galerías siguen cargando.
+[ ] 76. Confirmar que las tablas de inventario, tasas, ventas e historial siguen.
+[ ] 77. Registrar una venta manual y verificar el descuento correcto.
+[ ] 78. Anular una venta de prueba y verificar la reposición.
+[ ] 79. Confirmar que exportaciones y respaldo JSON siguen funcionando.
+[ ] 80. Confirmar que Supabase está Healthy y no aparecen errores de conexión.
+
+J. COMPROBACIÓN TÉCNICA DEL ENDPOINT
+------------------------------------
+[ ] 81. Abrir las herramientas de desarrollador (Network) o pedir apoyo técnico.
+[ ] 82. Al agregar, aumentar o continuar checkout, debe aparecer una solicitud
+       POST a /api/atle-stock.
+[ ] 83. La respuesta debe ser HTTP 200 cuando todas las variantes tienen stock.
+[ ] 84. Si se pide más stock del disponible, debe responder con error controlado
+       y un mensaje claro; no debe añadir ni enviar el pedido.
+[ ] 85. La respuesta no debe exponer SKU, costos, ventas ni claves.
+[ ] 86. Si la API no puede conectarse, la tienda debe bloquear la operación y
+       explicar que no pudo verificar existencias.
+
+K. PRODUCTOS SIN INVENTARIO CONFIGURADO
+---------------------------------------
+Los productos sin ficha de inventario activa (stock_enabled=true) se pueden ver,
+pero no se pueden agregar al carrito. Configura SKU y cantidades por color/talla
+para cada producto que quieras vender desde la tienda. Esta regla evita aceptar
+un pedido sin conocer el inventario.
+
+L. LIMITACIÓN IMPORTANTE POR NO RESERVAR STOCK
+----------------------------------------------
+Como el carrito no reserva unidades, dos clientes podrían consultar la última
+unidad casi al mismo tiempo antes de que la administradora registre una venta.
+La tienda valida al agregar, aumentar y enviar el pedido, pero no bloquea la
+unidad para otros clientes. La disponibilidad final se confirma por WhatsApp
+y se actualiza al registrar manualmente la venta.
+
+SI ALGO FALLA
+-------------
+1. No borres productos, SKU, fotografías, Storage ni tablas.
+2. No ejecutes SQL de instalación ni SQL destructivo.
+3. Conserva capturas del error y los logs de Vercel, ocultando claves.
+4. Si necesitas volver atrás, revierte el commit de esta actualización en GitHub
+   o restaura el ZIP anterior.
+5. Si falla /api/atle-stock, revisa las variables ATLE_SUPABASE_URL y
+   ATLE_SUPABASE_SECRET_KEY en Vercel, y los logs de esa función.
+6. No publiques la actualización como definitiva hasta completar las pruebas
+   principales de inventario, carrito, checkout, catálogo y ATLE Studio.
+
+FIN DE LA LISTA
