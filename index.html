@@ -284,7 +284,7 @@ function productTagsMarkup(p){
 }
 function productPriceMarkup(price){
  const currency=CONFIG.moneda||'USD';
- return `<div class="price-bcv-line"><strong class="price">${money(price)}</strong>${currency==='USD'?'<span class="price-bcv-label">- (Tasa BCV)</span>':`<span class="price-bcv-label">${escapeHtml(currency)}</span>`}</div>`;
+ return `<div class="price-bcv-line"><strong class="price">${money(price)}</strong>${currency==='USD'?'<span class="price-bcv-label">- (Tasa BCV €)</span>':`<span class="price-bcv-label">${escapeHtml(currency)}</span>`}</div>`;
 }
 function setCardGalleryIndex(card,index,syncColor=false){
  const p=productById(card.dataset.productId);if(!p)return;
